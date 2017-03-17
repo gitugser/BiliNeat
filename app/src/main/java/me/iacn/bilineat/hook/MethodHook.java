@@ -73,10 +73,10 @@ public class MethodHook {
         }
 
         removeDrawerVip();
-        hookThemeDialog();
-        hookBangumi();
-        hookMovie();
-        hookPage(homeIndex);
+        disableThemeDialog();
+        downloadBangumi();
+        downloadMovie();
+        setHomePage(homeIndex);
         addNeatEntrance();
     }
 
@@ -99,11 +99,6 @@ public class MethodHook {
         hookMethodByReturnType("bl." + className, methodName, returnType, state);
     }
 
-    /**
-     * 破解主题免费
-     *
-     * @param className Hook主题的类名
-     */
     private void freeTheme(String className) {
         findAndHookMethod("bl." + className, mClassLoader, "a", Constant.biliPackageName +
                 ".ui.theme.api.BiliSkinList", boolean.class, new XC_MethodHook() {
@@ -121,25 +116,6 @@ public class MethodHook {
                 }
             }
         });
-
-
-
-        /*findAndHookMethod("bl." + className, mClassLoader, "a",
-                "bl." + paramName, boolean.class, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        if (param.args[0] == null) return;
-
-                        List list = (List) getObjectField(param.args[0], "mList");
-
-                        if (list != null) {
-                            for (Object theme : list) {
-                                setBooleanField(theme, "mIsFree", true);
-                                setIntField(theme, "mPrice", 0);
-                            }
-                        }
-                    }
-                });*/
     }
 
     /**
@@ -233,24 +209,15 @@ public class MethodHook {
                 });
     }
 
-    /**
-     * 去除已购买主题过期的提示框
-     */
-    private void hookThemeDialog() {
+    private void disableThemeDialog() {
         findAndHookMethod("tv.danmaku.bili.MainActivity", mClassLoader, "c", XC_MethodReplacement.DO_NOTHING);
     }
 
-    /**
-     * 破解版权电影下载
-     */
-    private void hookMovie() {
+    private void downloadMovie() {
         hookMethodByReturnType("com.bilibili.api.BiliVideoDetail", "c", boolean.class, true);
     }
 
-    /**
-     * 破解版权番下载
-     */
-    private void hookBangumi() {
+    private void downloadBangumi() {
         Method[] methods = findMethodsByExactParameters(
                 findClass("com.bilibili.api.bangumi.BiliBangumiSeason", mClassLoader), boolean.class);
 
@@ -269,12 +236,7 @@ public class MethodHook {
         }
     }
 
-    /**
-     * 设置默认进入页面
-     *
-     * @param pageIndex 页面的角标值
-     */
-    private void hookPage(final int pageIndex) {
+    private void setHomePage(final int pageIndex) {
         // 默认为 「推荐」
         if (pageIndex == 1) return;
 
