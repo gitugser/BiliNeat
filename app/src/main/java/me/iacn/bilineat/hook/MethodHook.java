@@ -67,7 +67,7 @@ public class MethodHook {
                 hookResult("deu", "f", boolean.class, isDrawerPromote);
                 hookResult("deu", "g", boolean.class, isFoundGame);
                 hookResult("deu", "h", boolean.class, isCategoryGame);
-//                hookTheme("eol", "ark");
+                freeTheme("eol");
                 removeFoundMall("dwt");
                 break;
         }
@@ -103,10 +103,28 @@ public class MethodHook {
      * 破解主题免费
      *
      * @param className Hook主题的类名
-     * @param paramName Hook主题的参数类型
      */
-    private void hookTheme(String className, String paramName) {
-        findAndHookMethod("bl." + className, mClassLoader, "a",
+    private void freeTheme(String className) {
+        findAndHookMethod("bl." + className, mClassLoader, "a", Constant.biliPackageName +
+                ".ui.theme.api.BiliSkinList", boolean.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (param.args[0] == null) return;
+
+                List list = (List) getObjectField(param.args[0], "mList");
+
+                if (list != null) {
+                    for (Object theme : list) {
+                        setBooleanField(theme, "mIsFree", true);
+                        setIntField(theme, "mPrice", 0);
+                    }
+                }
+            }
+        });
+
+
+
+        /*findAndHookMethod("bl." + className, mClassLoader, "a",
                 "bl." + paramName, boolean.class, new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -121,7 +139,7 @@ public class MethodHook {
                             }
                         }
                     }
-                });
+                });*/
     }
 
     /**
