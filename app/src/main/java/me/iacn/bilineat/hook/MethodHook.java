@@ -61,15 +61,14 @@ public class MethodHook {
 
         // 根据当前版本决定要Hook的类和方法名
         switch (currentVersion) {
-            case "5.0.1":
-            case "5.0.0":
-                hookResult("dhx", "e", boolean.class, isCategoryGame);
-                hookResult("dhx", "f", boolean.class, isToolbarGame);
-                hookResult("dhx", "g", boolean.class, isDrawerPromote);
-                hookResult("dhx", "h", boolean.class, isFoundGame);
-                hookResult("dhx", "i", boolean.class, isCategoryGame);
-                hookTheme("eqh", "ark");
-                removeFoundMall("dzt");
+            case "5.1.0":
+                hookResult("deu", "d", boolean.class, isCategoryGame);
+                hookResult("deu", "e", boolean.class, isToolbarGame);
+                hookResult("deu", "f", boolean.class, isDrawerPromote);
+                hookResult("deu", "g", boolean.class, isFoundGame);
+                hookResult("deu", "h", boolean.class, isCategoryGame);
+//                hookTheme("eol", "ark");
+                removeFoundMall("dwt");
                 break;
         }
 
