@@ -1,4 +1,4 @@
-package me.iacn.bilineat.hook;
+package me.iacn.bilineat.util;
 
 import android.text.TextUtils;
 
@@ -16,9 +16,9 @@ import static de.robv.android.xposed.XposedHelpers.findClass;
  * Emali iAcn0301@foxmail.com
  */
 
-public class HookInfo {
+public class HookBuilder {
 
-    private ClassLoader mLoader;
+    private static ClassLoader mLoader;
 
     private String mClassName;
     private String mMethodName;
@@ -30,7 +30,47 @@ public class HookInfo {
 
     private XC_MethodHook mHookCallBack;
 
-    private HookInfo() {
+    private HookBuilder() {
+    }
+
+    public static HookBuilder create(ClassLoader loader) {
+        mLoader = loader;
+        return new HookBuilder();
+    }
+
+    public HookBuilder setClass(String clazz) {
+        mClassName = clazz;
+        return this;
+    }
+
+    public HookBuilder setClass(Class<?> clazz) {
+        mClass = clazz;
+        return this;
+    }
+
+    public HookBuilder setMethod(String method) {
+        mMethodName = method;
+        return this;
+    }
+
+    public HookBuilder setMethod(Method method) {
+        mMethod = method;
+        return this;
+    }
+
+    public HookBuilder setReturnType(Class<?> returnType) {
+        mReturnType = returnType;
+        return this;
+    }
+
+    public HookBuilder setParamTypes(Object... paramTypes) {
+        mParamTypes = paramTypes;
+        return this;
+    }
+
+    public HookBuilder setHookCallBack(XC_MethodHook callback) {
+        mHookCallBack = callback;
+        return this;
     }
 
     public void hook() {
@@ -94,58 +134,5 @@ public class HookInfo {
 
         Class<?>[] temp = new Class<?>[paramTypeList.size()];
         return paramTypeList.toArray(temp);
-    }
-
-    public static class Builder {
-
-        private HookInfo mInfo;
-
-        public Builder(ClassLoader loader) {
-            mInfo = new HookInfo();
-            mInfo.mLoader = loader;
-        }
-
-        public Builder setClass(String clazz) {
-            mInfo.mClassName = clazz;
-            return this;
-        }
-
-        public Builder setClass(Class<?> clazz) {
-            mInfo.mClass = clazz;
-            return this;
-        }
-
-        public Builder setMethod(String method) {
-            mInfo.mMethodName = method;
-            return this;
-        }
-
-        public Builder setMethod(Method method) {
-            mInfo.mMethod = method;
-            return this;
-        }
-
-        public Builder setReturnType(Class<?> returnType) {
-            mInfo.mReturnType = returnType;
-            return this;
-        }
-
-        public Builder setParamTypes(Object... paramTypes) {
-            mInfo.mParamTypes = paramTypes;
-            return this;
-        }
-
-        public Builder setHookCallBack(XC_MethodHook callback) {
-            mInfo.mHookCallBack = callback;
-            return this;
-        }
-
-        public HookInfo build() {
-            return mInfo;
-        }
-
-        public void hook() {
-            mInfo.hook();
-        }
     }
 }

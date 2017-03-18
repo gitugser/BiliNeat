@@ -20,6 +20,7 @@ import de.robv.android.xposed.XposedBridge;
 import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.Constant;
 import me.iacn.bilineat.XposedInit;
+import me.iacn.bilineat.util.HookBuilder;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
@@ -81,7 +82,7 @@ public class MethodHook {
      * 使用返回值类型查找并处理侧滑菜单、发现、Toolbar、分类里的广告开关
      */
     private void hookResult(String clazz, String method, boolean state) {
-        new HookInfo.Builder(mClassLoader)
+        HookBuilder.create(mClassLoader)
                 .setClass("bl." + clazz)
                 .setMethod(method)
                 .setReturnType(boolean.class)
@@ -90,7 +91,7 @@ public class MethodHook {
     }
 
     private void freeTheme(String className) {
-        new HookInfo.Builder(mClassLoader)
+        HookBuilder.create(mClassLoader)
                 .setClass("bl." + className)
                 .setMethod("a")
                 .setParamTypes(Constant.biliPackageName + ".ui.theme.api.BiliSkinList", boolean.class)
@@ -117,7 +118,7 @@ public class MethodHook {
     private void removeFoundMall(String className) {
         if (!XposedInit.xSharedPref.getBoolean("found_mall", false)) return;
 
-        new HookInfo.Builder(mClassLoader)
+        HookBuilder.create(mClassLoader)
                 .setClass("bl." + className)
                 .setMethod("onViewCreated")
                 .setParamTypes(View.class, Bundle.class)
@@ -156,7 +157,7 @@ public class MethodHook {
         }
 
 
-        /*new HookInfo.Builder(mClassLoader)
+        /*HookBuilder.create(mClassLoader)
                 .setClass("bl.dza")
                 .setMethod("a")
                 .setReturnType(List.class)
@@ -214,7 +215,7 @@ public class MethodHook {
 
         if (bcoin && myVip && vipPoint) return;
 
-        new HookInfo.Builder(mClassLoader)
+        HookBuilder.create(mClassLoader)
                 .setClass("tv.danmaku.bili.ui.main.NavigationFragment")
                 .setMethod("onViewCreated")
                 .setParamTypes(View.class, Bundle.class)
@@ -238,7 +239,7 @@ public class MethodHook {
     }
 
     private void disableThemeDialog() {
-        new HookInfo.Builder(mClassLoader)
+        HookBuilder.create(mClassLoader)
                 .setClass("tv.danmaku.bili.MainActivity")
                 .setMethod("c")
                 .setHookCallBack(XC_MethodReplacement.DO_NOTHING)
@@ -246,7 +247,7 @@ public class MethodHook {
     }
 
     private void downloadMovie() {
-        new HookInfo.Builder(mClassLoader)
+        HookBuilder.create(mClassLoader)
                 .setClass("com.bilibili.api.BiliVideoDetail")
                 .setMethod("c")
                 .setReturnType(boolean.class)
@@ -277,7 +278,7 @@ public class MethodHook {
         // 默认为 「推荐」
         if (pageIndex == 1) return;
 
-        new HookInfo.Builder(mClassLoader)
+        HookBuilder.create(mClassLoader)
                 .setClass("tv.danmaku.bili.ui.main.HomeFragment")
                 .setMethod("onViewCreated")
                 .setParamTypes(View.class, Bundle.class)
@@ -290,7 +291,7 @@ public class MethodHook {
     }
 
     private void addNeatEntrance() {
-        new HookInfo.Builder(mClassLoader)
+        HookBuilder.create(mClassLoader)
                 .setClass("tv.danmaku.bili.preferences.BiliPreferencesActivity$a")
                 .setMethod("onCreate")
                 .setParamTypes(Bundle.class)
