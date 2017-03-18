@@ -3,6 +3,8 @@ package me.iacn.bilineat.hook;
 import android.text.TextUtils;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -24,7 +26,7 @@ public class HookInfo {
     private Class<?> mClass;
     private Method mMethod;
     private Class<?> mReturnType;
-    private Class<?>[] mParamTypes;
+    private Object[] mParamTypes;
 
     private XC_MethodHook mHookCallBack;
 
@@ -66,11 +68,28 @@ public class HookInfo {
 
     private Method getMethodByReflect() {
         try {
-            return mClass.getDeclaredMethod(mMethodName, mParamTypes);
+            return mClass.getDeclaredMethod(mMethodName, objectsToClasses());
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Class<?>[] objectsToClasses() {
+        List<Class<?>> paramTypeList = new ArrayList();
+
+        for (Object obj : mParamTypes) {
+            if (obj instanceof String) {
+                Class<?> clazz = findClass((String) obj, mLoader);
+                paramTypeList.add(clazz);
+
+            } else if (obj instanceof Class) {
+                paramTypeList.add((Class<?>) obj);
+            }
+        }
+
+        Class<?>[] temp = new Class<?>[paramTypeList.size()];
+        return paramTypeList.toArray(temp);
     }
 
     public static class Builder {
@@ -112,7 +131,7 @@ public class HookInfo {
             return this;
         }
 
-        public Builder setMethodHook(XC_MethodHook callback) {
+        public Builder setHookCallBack(XC_MethodHook callback) {
             mInfo.mHookCallBack = callback;
             return this;
         }
