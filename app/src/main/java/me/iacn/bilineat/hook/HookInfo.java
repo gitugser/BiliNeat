@@ -32,19 +32,6 @@ public class HookInfo {
     }
 
     public void hook() {
-        System.out.println("-------------------------------");
-        System.out.println(mLoader);
-        System.out.println(mClassName);
-        System.out.println(mMethodName);
-        System.out.println(mClass);
-        System.out.println(mMethod);
-        System.out.println(mReturnType);
-        System.out.println(mParamTypes);
-        System.out.println(mHookCallBack);
-        System.out.println("-------------------------------");
-
-
-
         if (mLoader == null) return;
         if (mClass == null && TextUtils.isEmpty(mClassName)) return;
         if (mMethod == null && TextUtils.isEmpty(mMethodName)) return;
@@ -55,34 +42,35 @@ public class HookInfo {
 
         if (mMethod == null) {
             if (mReturnType != null) {
-                for (Method method : mClass.getDeclaredMethods()) {
-                    if (mMethodName.equals(method.getName()) &&
-                            mReturnType == method.getReturnType()) {
-                        mMethod = method;
-                    }
-                }
+                mMethod = getMethodByReturnType();
             } else {
-                try {
-                    mMethod = mClass.getDeclaredMethod(mMethodName, mParamTypes);
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                    return;
-                }
+                mMethod = getMethodByReflect();
             }
         }
 
-        System.out.println("-------------------------------");
-        System.out.println(mLoader);
-        System.out.println(mClassName);
-        System.out.println(mMethodName);
-        System.out.println(mClass);
-        System.out.println(mMethod);
-        System.out.println(mReturnType);
-        System.out.println(mParamTypes);
-        System.out.println(mHookCallBack);
-        System.out.println("-------------------------------");
+        if (mMethod == null) return;
 
         XposedBridge.hookMethod(mMethod, mHookCallBack);
+    }
+
+    private Method getMethodByReturnType() {
+        for (Method method : mClass.getDeclaredMethods()) {
+            if (mMethodName.equals(method.getName()) &&
+                    mReturnType == method.getReturnType()) {
+                return method;
+            }
+        }
+
+        return null;
+    }
+
+    private Method getMethodByReflect() {
+        try {
+            return mClass.getDeclaredMethod(mMethodName, mParamTypes);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static class Builder {
