@@ -74,8 +74,6 @@ public class MethodHook {
         downloadMovie();
         setHomePage(homeIndex);
         addNeatEntrance();
-
-        removePromoBanner("xxx");
     }
 
     /**
@@ -142,33 +140,22 @@ public class MethodHook {
      * 暂不做处理
      */
     private void removePromoBanner(String className) {
+        // Notes：
+        // 查找 Retrofit 的 getPromoList 方法调用类
+        // 定义了个不方法不调用是想咋的？
+
         Class<?> clazz = findClass("bl.dza", mClassLoader);
-        Method[] methods = clazz.getDeclaredMethods();
 
-        for (Method method : methods) {
-            if ("a".equals(method.getName()) && method.getReturnType() == List.class) {
-                XposedBridge.hookMethod(method, new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        System.out.println("================================================================afterHookedMethod = " + param.getResult());
-                    }
-                });
-            }
+        for (Method method : clazz.getDeclaredMethods()) {
+            System.out.println("所有方法名 = " + method.getName());
+
+            XposedBridge.hookMethod(method, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    System.out.println(param.method.getName() + " 执行完成，结果 = " + param.getResult());
+                }
+            });
         }
-
-
-        /*HookBuilder.create(mClassLoader)
-                .setClass("bl.dza")
-                .setMethod("a")
-                .setReturnType(List.class)
-                .setHookCallBack(new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        System.out.println("================================================================afterHookedMethod = " + param.getResult());
-                    }
-                })
-                .hook();*/
-
 
 
         /*if (!XposedInit.xSharedPref.getBoolean("promo_banner", false)) return;
