@@ -68,7 +68,11 @@ public class HookInfo {
 
     private Method getMethodByReflect() {
         try {
-            return mClass.getDeclaredMethod(mMethodName, objectsToClasses());
+            if (mParamTypes != null) {
+                return mClass.getDeclaredMethod(mMethodName, objectsToClasses());
+            } else {
+                return mClass.getDeclaredMethod(mMethodName);
+            }
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
             return null;
@@ -126,7 +130,7 @@ public class HookInfo {
             return this;
         }
 
-        public Builder setParamTypes(Class<?>... paramTypes) {
+        public Builder setParamTypes(Object... paramTypes) {
             mInfo.mParamTypes = paramTypes;
             return this;
         }
