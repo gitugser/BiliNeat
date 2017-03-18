@@ -187,6 +187,36 @@ public class MethodHook {
         });*/
     }
 
+    private void removeIndexDataStreamAd() {
+        // 妈蛋这个也不调用
+        // 官方这是挖了多少坑？
+        //
+        // Notes：
+        // IndexFeedFragment 是推荐页的，其中有个 List 存放着 BasicIndexItem
+
+        HookBuilder.create(mClassLoader)
+                .setClass("bl.dmt")
+                .setMethod("onCreate")
+                .setParamTypes(Bundle.class)
+                .setHookCallBack(new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        System.out.println("----------------------");
+
+                        Field field = findFirstFieldByExactType(param.thisObject.getClass(), List.class);
+                        field.setAccessible(true);
+                        System.out.println(field.getName());
+                        List list = (List) field.get(param.thisObject);
+
+                        System.out.println(list.size());
+
+                        for (Object obj : list) {
+                            System.out.println(obj);
+                        }
+                    }
+                }).hook();
+    }
+
     /**
      * 去除侧边栏我的大会员
      */
