@@ -12,7 +12,6 @@ import android.view.View;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -23,16 +22,12 @@ import me.iacn.bilineat.Constant;
 import me.iacn.bilineat.XposedInit;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
-import static de.robv.android.xposed.XposedHelpers.findAndHookConstructor;
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.findFirstFieldByExactType;
 import static de.robv.android.xposed.XposedHelpers.findMethodsByExactParameters;
-import static de.robv.android.xposed.XposedHelpers.getBooleanField;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setBooleanField;
 import static de.robv.android.xposed.XposedHelpers.setIntField;
-import static de.robv.android.xposed.XposedHelpers.setObjectField;
 
 /**
  * Created by iAcn on 2016/10/5
@@ -62,11 +57,11 @@ public class MethodHook {
         // 根据当前版本决定要Hook的类和方法名
         switch (currentVersion) {
             case "5.1.0":
-                hookResult("deu", "d", boolean.class, isCategoryGame);
-                hookResult("deu", "e", boolean.class, isToolbarGame);
-                hookResult("deu", "f", boolean.class, isDrawerPromote);
-                hookResult("deu", "g", boolean.class, isFoundGame);
-                hookResult("deu", "h", boolean.class, isCategoryGame);
+                hookResult("deu", "d", isCategoryGame);
+                hookResult("deu", "e", isToolbarGame);
+                hookResult("deu", "f", isDrawerPromote);
+                hookResult("deu", "g", isFoundGame);
+                hookResult("deu", "h", isCategoryGame);
                 freeTheme("eol");
                 removeFoundMall("dwt");
                 break;
@@ -78,44 +73,42 @@ public class MethodHook {
         downloadMovie();
         setHomePage(homeIndex);
         addNeatEntrance();
-    }
 
-    /**
-     * 处理侧滑菜单、发现、Toolbar、分类里的广告开关
-     *
-     * @param className  广告开关类名
-     * @param methodName 具体项目的方法名
-     * @param state      开关状态
-     */
-    private void hookResult(String className, String methodName, boolean state) {
-        findAndHookMethod("bl." + className, mClassLoader, methodName,
-                XC_MethodReplacement.returnConstant(state));
+        removePromoBanner("xxx");
     }
 
     /**
      * 使用返回值类型查找并处理侧滑菜单、发现、Toolbar、分类里的广告开关
      */
-    private void hookResult(String className, String methodName, Class<?> returnType, boolean state) {
-        hookMethodByReturnType("bl." + className, methodName, returnType, state);
+    private void hookResult(String clazz, String method, boolean state) {
+        new HookInfo.Builder(mClassLoader)
+                .setClass("bl." + clazz)
+                .setMethod(method)
+                .setReturnType(boolean.class)
+                .setHookCallBack(XC_MethodReplacement.returnConstant(state))
+                .hook();
     }
 
     private void freeTheme(String className) {
-        findAndHookMethod("bl." + className, mClassLoader, "a", Constant.biliPackageName +
-                ".ui.theme.api.BiliSkinList", boolean.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (param.args[0] == null) return;
+        new HookInfo.Builder(mClassLoader)
+                .setClass("bl." + className)
+                .setMethod("a")
+                .setParamTypes(Constant.biliPackageName + ".ui.theme.api.BiliSkinList", boolean.class)
+                .setHookCallBack(new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        if (param.args[0] == null) return;
 
-                List list = (List) getObjectField(param.args[0], "mList");
+                        List list = (List) getObjectField(param.args[0], "mList");
 
-                if (list != null) {
-                    for (Object theme : list) {
-                        setBooleanField(theme, "mIsFree", true);
-                        setIntField(theme, "mPrice", 0);
+                        if (list != null) {
+                            for (Object theme : list) {
+                                setBooleanField(theme, "mIsFree", true);
+                                setIntField(theme, "mPrice", 0);
+                            }
+                        }
                     }
-                }
-            }
-        });
+                }).hook();
     }
 
     /**
@@ -124,8 +117,11 @@ public class MethodHook {
     private void removeFoundMall(String className) {
         if (!XposedInit.xSharedPref.getBoolean("found_mall", false)) return;
 
-        findAndHookMethod("bl." + className, mClassLoader, "onViewCreated", View.class,
-                Bundle.class, new XC_MethodHook() {
+        new HookInfo.Builder(mClassLoader)
+                .setClass("bl." + className)
+                .setMethod("onViewCreated")
+                .setParamTypes(View.class, Bundle.class)
+                .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         View view = (View) param.args[0];
@@ -137,7 +133,7 @@ public class MethodHook {
                             view.findViewById(id).setVisibility(View.GONE);
                         }
                     }
-                });
+                }).hook();
     }
 
     /**
@@ -145,7 +141,36 @@ public class MethodHook {
      * 暂不做处理
      */
     private void removePromoBanner(String className) {
-        if (!XposedInit.xSharedPref.getBoolean("promo_banner", false)) return;
+        Class<?> clazz = findClass("bl.dza", mClassLoader);
+        Method[] methods = clazz.getDeclaredMethods();
+
+        for (Method method : methods) {
+            if ("a".equals(method.getName()) && method.getReturnType() == List.class) {
+                XposedBridge.hookMethod(method, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        System.out.println("================================================================afterHookedMethod = " + param.getResult());
+                    }
+                });
+            }
+        }
+
+
+        /*new HookInfo.Builder(mClassLoader)
+                .setClass("bl.dza")
+                .setMethod("a")
+                .setReturnType(List.class)
+                .setHookCallBack(new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        System.out.println("================================================================afterHookedMethod = " + param.getResult());
+                    }
+                })
+                .hook();*/
+
+
+
+        /*if (!XposedInit.xSharedPref.getBoolean("promo_banner", false)) return;
 
         Class<?> clazz = findClass("com.bilibili.api.promo.BiliPromoV2", mClassLoader);
 
@@ -171,7 +196,7 @@ public class MethodHook {
                     setObjectField(topBanners, "list", newList);
                 }
             }
-        });
+        });*/
     }
 
     /**
@@ -189,8 +214,11 @@ public class MethodHook {
 
         if (bcoin && myVip && vipPoint) return;
 
-        findAndHookMethod("tv.danmaku.bili.ui.main.NavigationFragment", mClassLoader, "onViewCreated",
-                View.class, Bundle.class, new XC_MethodHook() {
+        new HookInfo.Builder(mClassLoader)
+                .setClass("tv.danmaku.bili.ui.main.NavigationFragment")
+                .setMethod("onViewCreated")
+                .setParamTypes(View.class, Bundle.class)
+                .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         Class clazz = findClass("android.support.design.widget.NavigationView", mClassLoader);
@@ -206,15 +234,24 @@ public class MethodHook {
                         // 取得第九个 Menu，为 B币钱包
                         menu.getItem(8).setVisible(bcoin);
                     }
-                });
+                }).hook();
     }
 
     private void disableThemeDialog() {
-        findAndHookMethod("tv.danmaku.bili.MainActivity", mClassLoader, "c", XC_MethodReplacement.DO_NOTHING);
+        new HookInfo.Builder(mClassLoader)
+                .setClass("tv.danmaku.bili.MainActivity")
+                .setMethod("c")
+                .setHookCallBack(XC_MethodReplacement.DO_NOTHING)
+                .hook();
     }
 
     private void downloadMovie() {
-        hookMethodByReturnType("com.bilibili.api.BiliVideoDetail", "c", boolean.class, true);
+        new HookInfo.Builder(mClassLoader)
+                .setClass("com.bilibili.api.BiliVideoDetail")
+                .setMethod("c")
+                .setReturnType(boolean.class)
+                .setHookCallBack(XC_MethodReplacement.returnConstant(true))
+                .hook();
     }
 
     private void downloadBangumi() {
@@ -240,33 +277,24 @@ public class MethodHook {
         // 默认为 「推荐」
         if (pageIndex == 1) return;
 
-        findAndHookMethod("tv.danmaku.bili.ui.main.HomeFragment", mClassLoader,
-                "onViewCreated", View.class, Bundle.class, new XC_MethodHook() {
-
+        new HookInfo.Builder(mClassLoader)
+                .setClass("tv.danmaku.bili.ui.main.HomeFragment")
+                .setMethod("onViewCreated")
+                .setParamTypes(View.class, Bundle.class)
+                .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         setIntField(param.thisObject, "c", pageIndex);
                     }
-                });
-    }
-
-    /**
-     * 根据返回值类型来进行 Hook
-     */
-    private void hookMethodByReturnType(String className, String methodName, Class<?> returnType, boolean value) {
-        Method[] methods = findMethodsByExactParameters(findClass(className, mClassLoader), returnType);
-
-        for (Method method : methods) {
-            if (methodName.equals(method.getName())) {
-                XposedBridge.hookMethod(method, XC_MethodReplacement.returnConstant(value));
-            }
-        }
+                }).hook();
     }
 
     private void addNeatEntrance() {
-        findAndHookMethod("tv.danmaku.bili.preferences.BiliPreferencesActivity$a", mClassLoader,
-                "onCreate", Bundle.class, new XC_MethodHook() {
-
+        new HookInfo.Builder(mClassLoader)
+                .setClass("tv.danmaku.bili.preferences.BiliPreferencesActivity$a")
+                .setMethod("onCreate")
+                .setParamTypes(Bundle.class)
+                .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         final Activity activity = (Activity) callMethod(param.thisObject, "getActivity");
@@ -295,6 +323,6 @@ public class MethodHook {
 
                         category.addPreference(preference);
                     }
-                });
+                }).hook();
     }
 }
