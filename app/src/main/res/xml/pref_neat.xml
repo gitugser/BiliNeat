@@ -40,7 +40,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="promo_banner"
-        android:summary="去除各分区滑动横幅中的广告\n「官方变动较大，暂时无效」"
+        android:summary="去除各分区滑动横幅中的广告\n「官方变动较大，部分无效」"
         android:title="关闭横幅广告" />
 
     <CheckBoxPreference

@@ -12,6 +12,7 @@ import android.view.View;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -26,6 +27,7 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.findFirstFieldByExactType;
 import static de.robv.android.xposed.XposedHelpers.findMethodsByExactParameters;
+import static de.robv.android.xposed.XposedHelpers.getBooleanField;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setBooleanField;
 import static de.robv.android.xposed.XposedHelpers.setIntField;
@@ -69,13 +71,15 @@ public class MethodHook {
         }
 
         removeDrawerVip();
-        disableThemeDialog();
+        removePromoBanner();
+
         downloadBangumi();
         downloadMovie();
-        setHomePage(homeIndex);
-        addNeatEntrance();
 
-        removePromoBanner(null);
+        disableThemeDialog();
+        setHomePage(homeIndex);
+
+        addNeatEntrance();
     }
 
     /**
@@ -141,66 +145,28 @@ public class MethodHook {
      * 因官方在此处有较多变动
      * 暂不做处理
      */
-    private void removePromoBanner(String className) {
-        // Notes：
-        // 查找 Retrofit 的 getPromoList 方法调用类
-        // 定义了个不方法不调用是想咋的？
+    private void removePromoBanner() {
+        if (!XposedInit.xSharedPref.getBoolean("promo_banner", false)) return;
 
         HookBuilder.create(mClassLoader)
-                .setClass("bl.eat")
-                .setMethod("a")
-                .setParamTypes(boolean.class)
+                .setClass("tv.danmaku.bili.ui.category.api.CategoryIndex")
+                .setMethod("haveBanners")
                 .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
+                        Object banner = getObjectField(param.thisObject, "banner");
+                        List bottomBanners = (List) getObjectField(banner, "bottomBanners");
+
+                        for (Object obj : new ArrayList(bottomBanners)) {
+                            boolean isAd = getBooleanField(obj, "isAd");
+
+                            // 去除标识为 isAd 的 Banner
+                            if (isAd) {
+                                bottomBanners.remove(obj);
+                            }
+                        }
                     }
-                });
-
-
-        Class<?> clazz = findClass("bl.eat", mClassLoader);
-        Class<?> callbackClass = findClass("com.bilibili.api.base.Callback", mClassLoader);
-
-
-        for (Method method : clazz.getDeclaredMethods()) {
-            System.out.println("所有方法名 = " + method.getName());
-
-            XposedBridge.hookMethod(method, new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    System.out.println(param.method.getName() + " 执行完成，结果 = " + param.getResult());
-                }
-            });
-        }
-
-
-        /*if (!XposedInit.xSharedPref.getBoolean("promo_banner", false)) return;
-
-        Class<?> clazz = findClass("com.bilibili.api.promo.BiliPromoV2", mClassLoader);
-
-        findAndHookConstructor("bl." + className, mClassLoader, clazz, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Object biliPromoV2 = param.args[0];
-
-                if (biliPromoV2 == null) return;
-
-                Object topBanners = getObjectField(biliPromoV2, "topBanners");
-                List list = (List) getObjectField(topBanners, "list");
-
-                if (list != null) {
-                    List newList = new ArrayList();
-
-                    for (Object obj : list) {
-                        boolean isAd = getBooleanField(obj, "isAd");
-
-                        if (!isAd) newList.add(obj);
-                    }
-
-                    setObjectField(topBanners, "list", newList);
-                }
-            }
-        });*/
+                }).hook();
     }
 
     private void removeIndexDataStreamAd() {
