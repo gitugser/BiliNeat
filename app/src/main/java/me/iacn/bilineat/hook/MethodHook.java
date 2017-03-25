@@ -73,6 +73,8 @@ public class MethodHook {
         downloadMovie();
         setHomePage(homeIndex);
         addNeatEntrance();
+
+        removePromoBanner(null);
     }
 
     /**
@@ -143,7 +145,21 @@ public class MethodHook {
         // 查找 Retrofit 的 getPromoList 方法调用类
         // 定义了个不方法不调用是想咋的？
 
-        Class<?> clazz = findClass("bl.dza", mClassLoader);
+        HookBuilder.create(mClassLoader)
+                .setClass("bl.eat")
+                .setMethod("a")
+                .setParamTypes(boolean.class)
+                .setHookCallBack(new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+                    }
+                });
+
+
+        Class<?> clazz = findClass("bl.eat", mClassLoader);
+        Class<?> callbackClass = findClass("com.bilibili.api.base.Callback", mClassLoader);
+
 
         for (Method method : clazz.getDeclaredMethods()) {
             System.out.println("所有方法名 = " + method.getName());
