@@ -154,6 +154,9 @@ public class MethodHook {
                 .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        // 有 Banner 时才 Hook
+                        if (param.getResult() == false) return;
+
                         Object banner = getObjectField(param.thisObject, "banner");
                         List bottomBanners = (List) getObjectField(banner, "bottomBanners");
 
