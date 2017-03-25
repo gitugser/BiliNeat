@@ -148,28 +148,50 @@ public class MethodHook {
     private void removePromoBanner() {
         if (!XposedInit.xSharedPref.getBoolean("promo_banner", false)) return;
 
+        // 去除分区页面数据流里 Banner 的广告
         HookBuilder.create(mClassLoader)
                 .setClass("tv.danmaku.bili.ui.category.api.CategoryIndex")
                 .setMethod("haveBanners")
                 .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        boolean haveBanner = (boolean) param.getResult();
                         // 有 Banner 时才 Hook
-                        if (param.getResult() == false) return;
+                        if (!haveBanner) return;
 
                         Object banner = getObjectField(param.thisObject, "banner");
                         List bottomBanners = (List) getObjectField(banner, "bottomBanners");
+                        deleteAdItemFromList(bottomBanners);
+                    }
+                }).hook();
 
-                        for (Object obj : new ArrayList(bottomBanners)) {
-                            boolean isAd = getBooleanField(obj, "isAd");
-
-                            // 去除标识为 isAd 的 Banner
-                            if (isAd) {
-                                bottomBanners.remove(obj);
-                            }
+        // 去除各分区顶部 Banner 的广告
+        HookBuilder.create(mClassLoader)
+                .setClass("tv.danmaku.bili.ui.category.api.RegionRecommendVideo")
+                .setMethod("getBannerList")
+                .setHookCallBack(new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        List top = (List) param.getResult();
+                        if (top != null) {
+                            deleteAdItemFromList(top);
                         }
                     }
                 }).hook();
+    }
+
+    /**
+     * 从 List 里删除标识为 isAd 的 Item
+     */
+    private void deleteAdItemFromList(List list) {
+        for (Object obj : new ArrayList(list)) {
+            boolean isAd = getBooleanField(obj, "isAd");
+
+            // 去除标识为 isAd 的 Banner
+            if (isAd) {
+                list.remove(obj);
+            }
+        }
     }
 
     private void removeIndexDataStreamAd() {
