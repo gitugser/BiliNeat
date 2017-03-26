@@ -5,6 +5,7 @@
         <item>推荐</item>
         <item>追番</item>
         <item>分区</item>
+        <item>动态</item>
         <item>发现</item>
     </string-array>
 
@@ -14,6 +15,7 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+        <item>5</item>
     </string-array>
 
 </resources>

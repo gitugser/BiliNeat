@@ -300,7 +300,7 @@ public class MethodHook {
                 .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        setIntField(param.thisObject, "c", pageIndex);
+                        setIntField(param.thisObject, "d", pageIndex);
                     }
                 }).hook();
     }
