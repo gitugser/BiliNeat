@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="32dp">
+
+    <TableLayout
+        android:id="@+id/tl_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0">
+
+        <TableRow android:layout_marginBottom="16dp">
+
+            <TextView
+                android:text="哔哩版本:"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_bili_version"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="16sp" />
+
+        </TableRow>
+
+        <TableRow android:layout_marginBottom="16dp">
+
+            <TextView
+                android:text="净化版本:"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_neat_version"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="16sp" />
+
+        </TableRow>
+
+        <TableRow android:layout_marginBottom="16dp">
+
+            <TextView
+                android:text="是否支持:"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_supported"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="16sp" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="正在运行:"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_running"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="16sp" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:id="@+id/btn_update_config"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:padding="18dp"
+        android:text="更新配置文件"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_config_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_update_config"
+        android:layout_centerHorizontal="true"
+        android:text="配置版本:1.0.9"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="16dp"
+        android:visibility="gone" />
+
+</RelativeLayout>
