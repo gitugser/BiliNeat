@@ -80,6 +80,8 @@ public class MethodHook {
         setHomePage(homeIndex);
 
         addNeatEntrance();
+
+        removeIndexDataStreamAd();
     }
 
     /**
@@ -201,25 +203,34 @@ public class MethodHook {
         // Notes：
         // IndexFeedFragment 是推荐页的，其中有个 List 存放着 BasicIndexItem
 
+
+        Class<?> clazz = findClass("bl.dom$5", mClassLoader);
+        System.out.println(clazz);
+
         HookBuilder.create(mClassLoader)
-                .setClass("bl.dmt")
-                .setMethod("onCreate")
-                .setParamTypes(Bundle.class)
+                .setClass(clazz)
+                .setMethod("a")
+                .setParamTypes(List.class)
                 .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        System.out.println("----------------------");
+                        List list = (List) param.args[0];
 
-                        Field field = findFirstFieldByExactType(param.thisObject.getClass(), List.class);
-                        field.setAccessible(true);
-                        System.out.println(field.getName());
-                        List list = (List) field.get(param.thisObject);
+                        System.out.println("------- New Hook 1 -------");
 
-                        System.out.println(list.size());
+                        for (Object obj : new ArrayList(list)) {
+                            boolean isAd = getBooleanField(obj, "isAd");
+                            String title = (String) getObjectField(obj, "title");
 
-                        for (Object obj : list) {
-                            System.out.println(obj);
+                            System.out.println(title + ", isAd = " + isAd);
+
+                            // 去除标识为 isAd 的 Banner
+                            if (isAd) {
+                                list.remove(obj);
+                            }
                         }
+
+                        System.out.println("-------    End    -------");
                     }
                 }).hook();
     }
