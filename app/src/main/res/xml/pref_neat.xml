@@ -1,63 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="category_game"
-        android:summary="去除分区里的游戏中心"
-        android:title="关闭分区广告" />
+    <PreferenceCategory android:title="首页净化">
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="found_game"
-        android:summary="去除发现里的游戏中心"
-        android:title="关闭发现广告" />
+        <CheckBoxPreference
+            android:key="promo_stream"
+            android:summary="去除推荐数据流中的广告"
+            android:title="关闭推荐广告" />
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="toolbar_game"
-        android:summary="去除 Toolbar 里的游戏中心按钮"
-        android:title="关闭顶栏广告" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="toolbar_game"
+            android:summary="去除 Toolbar 里的游戏中心按钮"
+            android:title="关闭顶栏广告" />
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="drawer_promote"
-        android:summary="去除侧滑菜单里的应用推荐\n「官方变动较大，暂时无效」"
-        android:title="关闭侧边栏广告" />
+    </PreferenceCategory>
 
-    <CheckBoxPreference
-        android:key="found_group"
-        android:summary="去除发现里的兴趣圈"
-        android:title="关闭兴趣圈" />
+    <PreferenceCategory android:title="侧栏净化">
 
-    <CheckBoxPreference
-        android:key="found_mall"
-        android:summary="去除发现里的周边商城"
-        android:title="关闭周边商城" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="drawer_promote"
+            android:summary="去除侧滑菜单里的应用推荐\n「官方变动较大，暂时无效」"
+            android:title="关闭侧边栏广告" />
 
-    <CheckBoxPreference
-        android:key="promo_banner"
-        android:summary="去除各分区滑动横幅中的广告"
-        android:title="关闭横幅广告" />
+        <CheckBoxPreference
+            android:key="drawer_bcoin"
+            android:summary="去除侧滑菜单里的B币钱包"
+            android:title="关闭B币钱包" />
 
-    <CheckBoxPreference
-        android:key="promo_stream"
-        android:summary="去除推荐数据流中的广告"
-        android:title="关闭推荐广告" />
+        <CheckBoxPreference
+            android:key="drawer_vip_point"
+            android:summary="去除侧滑菜单里的会员积分"
+            android:title="关闭会员积分" />
 
-    <CheckBoxPreference
-        android:key="drawer_bcoin"
-        android:summary="去除侧滑菜单里的B币钱包"
-        android:title="关闭B币钱包" />
+        <CheckBoxPreference
+            android:key="drawer_my_vip"
+            android:summary="去除侧滑菜单里的我的大会员"
+            android:title="关闭我的大会员" />
 
-    <CheckBoxPreference
-        android:key="drawer_vip_point"
-        android:summary="去除侧滑菜单里的会员积分"
-        android:title="关闭会员积分" />
+    </PreferenceCategory>
 
-    <CheckBoxPreference
-        android:key="drawer_my_vip"
-        android:summary="去除侧滑菜单里的我的大会员"
-        android:title="关闭我的大会员" />
+    <PreferenceCategory android:title="分区净化">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="category_game"
+            android:summary="去除分区里的游戏中心"
+            android:title="关闭分区广告" />
+
+        <CheckBoxPreference
+            android:key="promo_banner"
+            android:summary="去除各分区滑动横幅中的广告"
+            android:title="关闭横幅广告" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="发现净化">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="found_game"
+            android:summary="去除发现里的游戏中心"
+            android:title="关闭发现广告" />
+
+        <CheckBoxPreference
+            android:key="found_mall"
+            android:summary="去除发现里的周边商城"
+            android:title="关闭周边商城" />
+
+        <CheckBoxPreference
+            android:key="found_group"
+            android:summary="去除发现里的兴趣圈"
+            android:title="关闭兴趣圈" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="其他功能">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="auto_link"
+            android:summary="自动将网址转为可点击的链接"
+            android:title="开启文字链接" />
+
+        <ListPreference
+            android:dialogTitle="选择默认进入页面"
+            android:entries="@array/default_page"
+            android:entryValues="@array/default_page_value"
+            android:key="default_page"
+            android:title="默认进入页面" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
