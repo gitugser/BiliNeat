@@ -9,7 +9,7 @@ import android.preference.PreferenceFragment;
  * Emali iAcn0301@foxmail.com
  */
 
-public abstract class BaseFragment extends PreferenceFragment {
+public abstract class BasePrefFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

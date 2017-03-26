@@ -17,7 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.iacn.bilineat.R;
@@ -73,9 +73,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mOnClickListener = ReflectUtils.getObjectField(mMenuView,
                 "mOnClickListener", View.OnClickListener.class);
 
-        final List<Fragment> pageList = new ArrayList<>();
-        pageList.add(new ActionFragment());
-        pageList.add(new AboutFragment());
+        final List<Fragment> pageList = Arrays.asList(
+                new StateFragment(),
+                new ActionFragment(),
+                new AboutFragment());
 
         mPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override

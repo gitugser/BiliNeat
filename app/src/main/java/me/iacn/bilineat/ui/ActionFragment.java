@@ -8,13 +8,13 @@ import android.preference.Preference;
  * Emali iAcn0301@foxmail.com
  */
 
-public class ActionFragment extends BaseFragment implements Preference.OnPreferenceChangeListener {
+public class ActionFragment extends BasePrefFragment implements Preference.OnPreferenceChangeListener {
 
     private ListPreference defaultPage;
 
     @Override
     protected int getXmlId() {
-        return me.iacn.bilineat.R.xml.pref_action;
+        return me.iacn.bilineat.R.xml.preference_action;
     }
 
     @Override

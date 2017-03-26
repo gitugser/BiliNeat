@@ -14,8 +14,6 @@ import android.widget.Toast;
 import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.Constant;
 import me.iacn.bilineat.R;
-import me.iacn.bilineat.ui.BaseFragment;
-import me.iacn.bilineat.ui.MainActivity;
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
 
 /**
@@ -23,7 +21,7 @@ import moe.feng.alipay.zerosdk.AlipayZeroSdk;
  * Emali iAcn0301@foxmail.com
  */
 
-public class AboutFragment extends BaseFragment implements Preference.OnPreferenceClickListener {
+public class AboutFragment extends BasePrefFragment implements Preference.OnPreferenceClickListener {
 
     private PackageManager mManager;
     private ComponentName mComponentName;
@@ -34,7 +32,7 @@ public class AboutFragment extends BaseFragment implements Preference.OnPreferen
 
     @Override
     protected int getXmlId() {
-        return R.xml.pref_about;
+        return R.xml.preference_about;
     }
 
     @Override
