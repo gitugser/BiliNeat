@@ -6,6 +6,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
@@ -15,10 +19,10 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.iacn.bilineat.hook.LayoutHook;
 import me.iacn.bilineat.hook.MethodHook;
+import me.iacn.bilineat.util.HookBuilder;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 
 /**
@@ -47,35 +51,42 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
                 .getPackageInfo(Constant.biliPackageName, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT).versionName;
 
         // 判断插件是否支持当前哔哩哔哩版本
-        for (String version : Constant.supportVersions) {
-            if (version.equals(currentVersion)) {
-                xSharedPref.reload();
+        Set<String> set = new HashSet<>();
+        Collections.addAll(set, Constant.supportVersions);
 
+        if (set.contains(currentVersion)) {
+            xSharedPref.reload();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                new MethodHook().doHook(loadPackageParam.classLoader, currentVersion);
+
+            } else {
                 // Lollipop 以下在 Application 初始化完成后再进行 Hook
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    findAndHookMethod("tv.danmaku.bili.MainApplication", loadPackageParam.classLoader,
-                            "onCreate", new XC_MethodHook() {
-                                @Override
-                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                    new MethodHook().doHook(loadPackageParam.classLoader, currentVersion);
-                                }
-                            });
-                } else {
-                    new MethodHook().doHook(loadPackageParam.classLoader, currentVersion);
-                }
-
-                return;
+                HookBuilder.create(loadPackageParam.classLoader)
+                        .setClass("tv.danmaku.bili.MainApplication")
+                        .setMethod("onCreate")
+                        .setHookCallBack(new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                new MethodHook().doHook(loadPackageParam.classLoader, currentVersion);
+                            }
+                        }).hook();
             }
+
+            return;
         }
 
         // 如果不支持当前哔哩哔哩版本,弹出 Toast 提示
-        findAndHookMethod("tv.danmaku.bili.ui.splash.SplashActivity", loadPackageParam.classLoader, "onCreate",
-                Bundle.class, new XC_MethodHook() {
+        HookBuilder.create(loadPackageParam.classLoader)
+                .setClass("tv.danmaku.bili.ui.splash.SplashActivity")
+                .setMethod("onCreate")
+                .setParamTypes(Bundle.class)
+                .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
                         Toast.makeText((Context) param.thisObject, "哔哩净化暂不支持你的版本哦~", Toast.LENGTH_LONG).show();
                     }
-                });
+                }).hook();
     }
 
     @Override
