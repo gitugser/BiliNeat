@@ -67,6 +67,7 @@ public class MethodHook {
                 hookResult("dgn", "g", isCategoryGame);
                 freeTheme("eqe");
                 removeFoundMall("dym");
+                removeIndexDataStreamAd("dom$5");
                 break;
         }
 
@@ -80,8 +81,6 @@ public class MethodHook {
         setHomePage(homeIndex);
 
         addNeatEntrance();
-
-        removeIndexDataStreamAd();
     }
 
     /**
@@ -144,8 +143,7 @@ public class MethodHook {
     }
 
     /**
-     * 因官方在此处有较多变动
-     * 暂不做处理
+     * 去除分区选择界面和各分区二级界面 Banner 中的广告
      */
     private void removePromoBanner() {
         if (!XposedInit.xSharedPref.getBoolean("promo_banner", false)) return;
@@ -196,41 +194,23 @@ public class MethodHook {
         }
     }
 
-    private void removeIndexDataStreamAd() {
-        // 妈蛋这个也不调用
-        // 官方这是挖了多少坑？
-        //
-        // Notes：
-        // IndexFeedFragment 是推荐页的，其中有个 List 存放着 BasicIndexItem
-
-
-        Class<?> clazz = findClass("bl.dom$5", mClassLoader);
-        System.out.println(clazz);
+    /**
+     * 去除首页推荐数据流中的广告
+     */
+    private void removeIndexDataStreamAd(String clazz) {
+        if (!XposedInit.xSharedPref.getBoolean("promo_stream", false)) return;
 
         HookBuilder.create(mClassLoader)
-                .setClass(clazz)
+                .setClass("bl." + clazz)
                 .setMethod("a")
                 .setParamTypes(List.class)
                 .setHookCallBack(new XC_MethodHook() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         List list = (List) param.args[0];
-
-                        System.out.println("------- New Hook 1 -------");
-
-                        for (Object obj : new ArrayList(list)) {
-                            boolean isAd = getBooleanField(obj, "isAd");
-                            String title = (String) getObjectField(obj, "title");
-
-                            System.out.println(title + ", isAd = " + isAd);
-
-                            // 去除标识为 isAd 的 Banner
-                            if (isAd) {
-                                list.remove(obj);
-                            }
+                        if (list != null) {
+                            deleteAdItemFromList(list);
                         }
-
-                        System.out.println("-------    End    -------");
                     }
                 }).hook();
     }

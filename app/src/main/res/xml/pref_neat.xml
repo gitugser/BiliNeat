@@ -26,37 +26,36 @@
         android:title="关闭侧边栏广告" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
         android:key="found_group"
         android:summary="去除发现里的兴趣圈"
         android:title="关闭兴趣圈" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
         android:key="found_mall"
         android:summary="去除发现里的周边商城"
         android:title="关闭周边商城" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
         android:key="promo_banner"
         android:summary="去除各分区滑动横幅中的广告"
         android:title="关闭横幅广告" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:key="promo_stream"
+        android:summary="去除推荐数据流中的广告"
+        android:title="关闭推荐广告" />
+
+    <CheckBoxPreference
         android:key="drawer_bcoin"
         android:summary="去除侧滑菜单里的B币钱包"
         android:title="关闭B币钱包" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
         android:key="drawer_vip_point"
         android:summary="去除侧滑菜单里的会员积分"
         android:title="关闭会员积分" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
         android:key="drawer_my_vip"
         android:summary="去除侧滑菜单里的我的大会员"
         android:title="关闭我的大会员" />
