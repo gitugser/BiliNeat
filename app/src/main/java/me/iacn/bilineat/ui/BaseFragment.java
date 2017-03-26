@@ -1,4 +1,4 @@
-package me.iacn.bilineat.ui.fragment;
+package me.iacn.bilineat.ui;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package me.iacn.bilineat.ui.fragment;
+package me.iacn.bilineat.ui;
 
 import android.preference.ListPreference;
 import android.preference.Preference;

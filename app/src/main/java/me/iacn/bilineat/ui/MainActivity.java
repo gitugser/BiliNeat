@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.iacn.bilineat.R;
-import me.iacn.bilineat.ui.fragment.AboutFragment;
-import me.iacn.bilineat.ui.fragment.ActionFragment;
-import me.iacn.bilineat.ui.fragment.NeatFragment;
 import me.iacn.bilineat.util.ReflectUtils;
 import me.iacn.bilineat.util.StatusBarUtils;
 
@@ -77,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 "mOnClickListener", View.OnClickListener.class);
 
         final List<Fragment> pageList = new ArrayList<>();
-        pageList.add(new NeatFragment());
         pageList.add(new ActionFragment());
         pageList.add(new AboutFragment());
 

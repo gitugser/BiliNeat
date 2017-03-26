@@ -1,4 +1,4 @@
-package me.iacn.bilineat.ui.fragment;
+package me.iacn.bilineat.ui;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.Constant;
 import me.iacn.bilineat.R;
+import me.iacn.bilineat.ui.BaseFragment;
 import me.iacn.bilineat.ui.MainActivity;
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
 
