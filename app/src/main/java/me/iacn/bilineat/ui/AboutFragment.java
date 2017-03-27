@@ -11,7 +11,6 @@ import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.Constant;
 import me.iacn.bilineat.R;
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
@@ -21,14 +20,11 @@ import moe.feng.alipay.zerosdk.AlipayZeroSdk;
  * Emali iAcn0301@foxmail.com
  */
 
-public class AboutFragment extends BasePrefFragment implements Preference.OnPreferenceClickListener {
+public class AboutFragment extends BasePrefFragment {
 
     private PackageManager mManager;
     private ComponentName mComponentName;
     private SharedPreferences mSharedPref;
-
-    private Preference donate;
-    private Preference version;
 
     @Override
     protected int getXmlId() {
@@ -41,14 +37,17 @@ public class AboutFragment extends BasePrefFragment implements Preference.OnPref
         mComponentName = new ComponentName(getActivity(), MainActivity.class.getName() + "-Alias");
         mSharedPref = getActivity().getSharedPreferences("setting", Context.MODE_WORLD_READABLE);
 
-        donate = findPreference("donate");
-        version = findPreference("version");
+        findPreference("supported_version").setSummary(TextUtils.join(", ", Constant.supportVersions));
+        findPreference("donate").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                openAliPay();
+                return true;
+            }
+        });
+
         SwitchPreference hideLauncher = (SwitchPreference) findPreference("hide_launcher");
-
         hideLauncher.setPersistent(false);
-        donate.setOnPreferenceClickListener(this);
-        version.setOnPreferenceClickListener(this);
-
         hideLauncher.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -72,21 +71,6 @@ public class AboutFragment extends BasePrefFragment implements Preference.OnPref
         boolean executed = mSharedPref.getBoolean("change_method_executed", false);
 
         hideLauncher.setChecked(!executed || isHide);
-        version.setSummary(BuildConfig.VERSION_NAME);
-    }
-
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-        if (preference == version) {
-            String text = "支持哔哩哔哩版本:\n" + TextUtils.join(", ", Constant.supportVersions);
-            Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            return true;
-        } else if (preference == donate) {
-            openAliPay();
-            return true;
-        }
-
-        return false;
     }
 
     private void openAliPay() {

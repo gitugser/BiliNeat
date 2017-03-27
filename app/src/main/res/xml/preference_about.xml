@@ -10,21 +10,31 @@
         android:title="作者" />
 
     <Preference
-        android:key="version"
-        android:title="版本" />
+        android:key="supported_version"
+        android:title="支持" />
 
     <Preference
         android:key="donate"
-        android:summary="点击会尝试打开支付宝"
+        android:summary="这会尝试打开支付宝"
         android:title="捐赠" />
 
     <Preference
-        android:summary="点击打开插件更新地址"
-        android:title="下载地址">
+        android:summary="https://iacn.me"
+        android:title="我的博客">
 
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://pan.baidu.com/s/1gfqIGev" />
+            android:data="https://iacn.me" />
+
+    </Preference>
+
+    <Preference
+        android:summary="https://github.com/iAcn/BiliNeat"
+        android:title="开源地址">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/iAcn/BiliNeat" />
 
     </Preference>
 
