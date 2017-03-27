@@ -1,8 +1,15 @@
 package me.iacn.bilineat.hook;
 
+import android.content.Context;
 import android.content.res.XResources;
+import android.os.Bundle;
+import android.widget.Toast;
 
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import me.iacn.bilineat.bean.HookBean;
+import me.iacn.bilineat.ui.StateFragment;
+import me.iacn.bilineat.util.HookBuilder;
 
 /**
  * Created by iAcn on 2017/3/27
@@ -24,6 +31,24 @@ public class HookHandler {
     public static void layoutHook(XResources res) {
         LayoutHook.doHook(res);
     }
+
+    /**
+     * 在哔哩哔哩启动时显示 Toast
+     */
+    public static void showStartToast(ClassLoader loader, final String message) {
+        HookBuilder.create(loader)
+                .setClass("tv.danmaku.bili.ui.splash.SplashActivity")
+                .setMethod("onCreate")
+                .setParamTypes(Bundle.class)
+                .setHookCallBack(new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+                        Toast.makeText((Context) param.thisObject, message, Toast.LENGTH_LONG).show();
+                    }
+                }).hook();
+    }
+
+
 
     private static HookBean getHookBean(String currentVersion) {
         HookBean bean = new HookBean();
