@@ -15,14 +15,14 @@ import me.iacn.bilineat.XposedInit;
  * Emali iAcn0301@foxmail.com
  */
 
-public class LayoutHook {
+class LayoutHook {
 
     /**
      * 布局Hook的具体实现方法
      *
      * @param res Xposed 的 XResources
      */
-    public void doHook(XResources res) {
+    public static void doHook(XResources res) {
         // 去除发现里的兴趣圈
         if (XposedInit.xSharedPref.getBoolean("found_group", false)) {
             res.hookLayout(Constant.biliPackageName, "layout", "bili_app_fragment_discover", new XC_LayoutInflated() {

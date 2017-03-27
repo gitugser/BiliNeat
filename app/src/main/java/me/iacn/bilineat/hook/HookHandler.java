@@ -1,5 +1,7 @@
 package me.iacn.bilineat.hook;
 
+import android.content.res.XResources;
+
 import me.iacn.bilineat.bean.HookBean;
 
 /**
@@ -17,6 +19,10 @@ public class HookHandler {
             HomeHook.doHook(loader, bean);
             OtherHook.doHook(loader, bean);
         }
+    }
+
+    public static void layoutHook(XResources res) {
+        LayoutHook.doHook(res);
     }
 
     private static HookBean getHookBean(String currentVersion) {
