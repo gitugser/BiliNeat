@@ -48,7 +48,10 @@ public class HookHandler {
                 }).hook();
     }
 
-
+    public static void hookSelf(ClassLoader loader) {
+        Class<?> clazz = XposedHelpers.findClass(StateFragment.class.getName(), loader);
+        XposedHelpers.setStaticBooleanField(clazz, "sXposedRunning", true);
+    }
 
     private static HookBean getHookBean(String currentVersion) {
         HookBean bean = new HookBean();

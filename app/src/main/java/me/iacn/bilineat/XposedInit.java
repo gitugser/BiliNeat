@@ -39,7 +39,15 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
-        if (!Constant.biliPackageName.equals(loadPackageParam.packageName)) return;
+        if (BuildConfig.APPLICATION_ID.equals(loadPackageParam.packageName)) {
+            // Hook 自身
+            HookHandler.hookSelf(loadPackageParam.classLoader);
+            return;
+
+        } else if (!Constant.biliPackageName.equals(loadPackageParam.packageName)) {
+            // Hook 哔哩哔哩
+            return;
+        }
 
         Object activityThread = callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread");
         Context context = (Context) callMethod(activityThread, "getSystemContext");
