@@ -26,7 +26,7 @@ import static de.robv.android.xposed.XposedHelpers.setIntField;
  * Emali iAcn0301@foxmail.com
  */
 
-public class HomeHook {
+class HomeHook {
 
     private static ClassLoader mClassLoader;
 
