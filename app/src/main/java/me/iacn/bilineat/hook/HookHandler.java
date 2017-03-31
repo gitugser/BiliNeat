@@ -58,6 +58,18 @@ public class HookHandler {
 
         // 根据当前版本决定要Hook的类和方法名
         switch (currentVersion) {
+            case "5.2.0":
+                bean.onlineHelper = "dhn";
+                bean.onlineCategoryGame = "d";
+                bean.onlineToolbarGame = "e";
+                bean.onlineFoundGame = "g";
+                bean.onlineGameCenter = "h";
+
+                bean.themeClass = "epo";
+                bean.foundMall = "dyo";
+                bean.indexInnerClass = "dol$5";
+                break;
+
             case "5.1.2":
             case "5.1.1":
                 bean.onlineHelper = "dgn";
