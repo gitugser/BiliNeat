@@ -39,6 +39,11 @@
             android:summary="去除侧滑菜单里的我的大会员"
             android:title="关闭我的大会员" />
 
+        <CheckBoxPreference
+            android:key="drawer_unicom_sim"
+            android:summary="去除侧滑菜单里的免流量服务"
+            android:title="关闭联通 SIM 卡" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="分区净化">
