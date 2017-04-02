@@ -189,8 +189,8 @@ class HomeHook {
                         // 取得第三个 Menu，为 会员积分
                         menu.getItem(2).setVisible(vipPoint);
 
-                        // 取得第九个 Menu，为 B币钱包
-                        menu.getItem(8).setVisible(bcoin);
+                        // 取得第十个 Menu，为 B币钱包
+                        menu.getItem(9).setVisible(bcoin);
                     }
                 }).hook();
     }
