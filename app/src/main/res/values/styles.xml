@@ -10,7 +10,6 @@
     </style>
 
     <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:background">?colorPrimary</item>
         <item name="colorAccent">@android:color/white</item>
     </style>
 
