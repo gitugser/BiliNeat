@@ -134,7 +134,8 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
             case "Switch":
                 Switch sw = new Switch(context, attrs);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // SwitchCompat 既没有动画 TintMode 也不对，就不用了
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     sw.setThumbTintList(colorList);
                     sw.setTrackTintList(colorList);
                 }
