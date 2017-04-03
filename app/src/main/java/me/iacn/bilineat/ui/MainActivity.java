@@ -1,8 +1,11 @@
 package me.iacn.bilineat.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,9 +14,8 @@ import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,8 +26,10 @@ import me.iacn.bilineat.R;
 import me.iacn.bilineat.util.ReflectUtils;
 import me.iacn.bilineat.util.StatusBarUtils;
 
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
+public class MainActivity extends Activity implements ViewPager.OnPageChangeListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private int mThemeColor;
 
     private ViewPager mPager;
     private SharedPreferences mSharePref;
@@ -38,6 +42,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        mThemeColor = intent.getIntExtra("color", 0);
+
         StatusBarUtils.setColor(this, getResources().getColor(R.color.pink));
 
         findView();
@@ -52,13 +60,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mBottomBar = (BottomNavigationView) findViewById(R.id.bottom_bar);
     }
 
-    private void initActionBar() {
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        System.out.println(name);
+        return super.onCreateView(name, context, attrs);
+    }
 
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+    private void initActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(mThemeColor);
+        toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void initData() {
@@ -100,12 +117,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, 0);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        onBackPressed();
-        return true;
     }
 
     @Override
