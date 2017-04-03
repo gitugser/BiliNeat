@@ -171,7 +171,11 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(0, 0);
+
+        if (getIntent().hasExtra("color")) {
+            // 是从哔哩哔哩内进入的
+            overridePendingTransition(0, 0);
+        }
     }
 
     @Override
