@@ -3,11 +3,13 @@ package me.iacn.bilineat.hook;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import me.iacn.bilineat.util.HookBuilder;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findFirstFieldByExactType;
 import static de.robv.android.xposed.XposedHelpers.findMethodsByExactParameters;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setBooleanField;
@@ -122,6 +125,7 @@ class OtherHook {
                                 Intent intent = new Intent();
                                 intent.setComponent(new ComponentName(BuildConfig.APPLICATION_ID,
                                         BuildConfig.APPLICATION_ID + ".ui.MainActivity"));
+                                intent.putExtra("color", getBiliThemeColor(activity));
 
                                 activity.startActivity(intent);
                                 activity.overridePendingTransition(0, 0);
@@ -139,5 +143,21 @@ class OtherHook {
                         category.addPreference(preference);
                     }
                 }).hook();
+    }
+
+    private static int getBiliThemeColor(Activity externalActivity) {
+        Class<?> toolbarClass = findClass("com.bilibili.magicasakura.widgets.TintToolbar", mClassLoader);
+        Field field = findFirstFieldByExactType(externalActivity.getClass(), toolbarClass);
+        field.setAccessible(true);
+
+        try {
+            Object obj = field.get(externalActivity);
+            ColorDrawable drawable = (ColorDrawable) callMethod(obj, "getBackground");
+            return drawable.getColor();
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }
