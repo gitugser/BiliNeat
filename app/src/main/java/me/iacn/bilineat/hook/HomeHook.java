@@ -152,7 +152,7 @@ class HomeHook {
                 .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        setIntField(param.thisObject, "d", homeIndex);
+                        setIntField(param.thisObject, "c", homeIndex);
                     }
                 }).hook();
     }
