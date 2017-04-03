@@ -51,6 +51,7 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
         ThemeHelper.init(getIntent());
         StatusBarUtils.setColor(this, ThemeHelper.getPrimaryColor());
+        ThemeHelper.updateTaskColor(this);
 
         findView();
         initActionBar();

@@ -1,8 +1,15 @@
 package me.iacn.bilineat.util;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.text.TextUtils;
+
+import me.iacn.bilineat.R;
 
 /**
  * Created by iAcn on 2017/4/3
@@ -35,5 +42,16 @@ public class ThemeHelper {
         colors[1] = Color.parseColor("#6b6b6b"); // 取色得到的未勾选颜色
 
         return new ColorStateList(states, colors);
+    }
+
+    public static void updateTaskColor(Activity activity) {
+        String label = activity.getTitle().toString().trim();
+        Bitmap icon = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.ic_launcher);
+
+        if (TextUtils.isEmpty(label)) {
+            label = activity.getResources().getString(R.string.app_name);
+        }
+
+        activity.setTaskDescription(new ActivityManager.TaskDescription(label, icon, getPrimaryColor()));
     }
 }
