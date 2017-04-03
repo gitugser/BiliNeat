@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -18,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +49,6 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
         Intent intent = getIntent();
         mThemeColor = intent.getIntExtra("color", -298343);
-        System.out.println(mThemeColor);
 
         StatusBarUtils.setColor(this, getResources().getColor(R.color.pink));
 
@@ -59,11 +62,6 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
     private void findView() {
         mPager = (ViewPager) findViewById(R.id.view_pager);
         mBottomBar = (BottomNavigationView) findViewById(R.id.bottom_bar);
-    }
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(name, context, attrs);
     }
 
     private void initActionBar() {
@@ -111,6 +109,26 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
     private void setListener() {
         mPager.addOnPageChangeListener(this);
         mBottomBar.setOnNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        System.out.println(name);
+        ColorStateList colorList = getCheckedColorList();
+
+        switch (name) {
+            case "CheckBox":
+                CheckBox checkBox = new CheckBox(context, attrs);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    checkBox.setButtonTintList(colorList);
+                }
+
+                return checkBox;
+
+            default:
+                return super.onCreateView(name, context, attrs);
+        }
     }
 
     @Override
@@ -168,5 +186,17 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                     }
                 })
                 .show();
+    }
+
+    private ColorStateList getCheckedColorList() {
+        int[][] states = new int[2][];
+        states[0] = new int[]{android.R.attr.state_checked};
+        states[1] = new int[]{-android.R.attr.state_checked};
+
+        int[] colors = new int[2];
+        colors[0] = mThemeColor;
+        colors[1] = Color.parseColor("#6b6b6b"); // 取色得到的未勾选颜色
+
+        return new ColorStateList(states, colors);
     }
 }
