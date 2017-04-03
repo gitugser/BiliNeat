@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,12 +17,14 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -125,6 +128,23 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                 }
 
                 return checkBox;
+
+            case "CheckedTextView":
+                CheckedTextView view = new CheckedTextView(context, attrs);
+                int sdkInt = Build.VERSION.SDK_INT;
+
+                if (sdkInt >= Build.VERSION_CODES.LOLLIPOP && sdkInt < Build.VERSION_CODES.M) {
+                    // 5.0
+                    view.setCheckMarkTintList(colorList);
+                } else if (sdkInt >= Build.VERSION_CODES.M) {
+                    // 6.0+
+                    Drawable radioDrawable = ContextCompat.getDrawable(
+                            this, android.support.v7.appcompat.R.drawable.abc_btn_radio_material);
+                    radioDrawable.setTintList(colorList);
+                    view.setCompoundDrawablesRelativeWithIntrinsicBounds(radioDrawable, null, null, null);
+                }
+
+                return view;
 
             default:
                 return super.onCreateView(name, context, attrs);
