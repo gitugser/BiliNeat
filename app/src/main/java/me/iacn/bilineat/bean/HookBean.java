@@ -12,6 +12,7 @@ public class HookBean {
     public String onlineHelper;
     public String onlineCategoryGame;
     public String onlineToolbarGame;
+    public String onlineUnicomSim;
     public String onlineFoundGame;
     public String onlineGameCenter;
 
@@ -23,6 +24,7 @@ public class HookBean {
         return TextUtils.isEmpty(onlineHelper) ||
                 TextUtils.isEmpty(onlineCategoryGame) ||
                 TextUtils.isEmpty(onlineToolbarGame) ||
+                TextUtils.isEmpty(onlineUnicomSim) ||
                 TextUtils.isEmpty(onlineFoundGame) ||
                 TextUtils.isEmpty(onlineGameCenter) ||
                 TextUtils.isEmpty(themeClass) ||

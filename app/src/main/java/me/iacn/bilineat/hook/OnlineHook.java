@@ -20,10 +20,12 @@ class OnlineHook {
         boolean isCategoryGame = !XposedInit.xSharedPref.getBoolean("category_game", true);
         boolean isFoundGame = !XposedInit.xSharedPref.getBoolean("found_game", true);
         boolean isToolbarGame = !XposedInit.xSharedPref.getBoolean("toolbar_game", true);
-        boolean isDrawerPromote = !XposedInit.xSharedPref.getBoolean("drawer_promote", true);
+        boolean isUnicomSim = !XposedInit.xSharedPref.getBoolean("drawer_unicom_sim", false);
+//        boolean isDrawerPromote = drawer_promote", true);
 
         hookResult(bean.onlineHelper, bean.onlineCategoryGame, isCategoryGame);
         hookResult(bean.onlineHelper, bean.onlineToolbarGame, isToolbarGame);
+        hookResult(bean.onlineHelper, bean.onlineUnicomSim, isUnicomSim);
         hookResult(bean.onlineHelper, bean.onlineFoundGame, isFoundGame);
         hookResult(bean.onlineHelper, bean.onlineGameCenter, isCategoryGame);
     }

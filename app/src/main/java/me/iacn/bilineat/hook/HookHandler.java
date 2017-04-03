@@ -62,6 +62,7 @@ public class HookHandler {
                 bean.onlineHelper = "dhn";
                 bean.onlineCategoryGame = "d";
                 bean.onlineToolbarGame = "e";
+                bean.onlineUnicomSim = "f";
                 bean.onlineFoundGame = "g";
                 bean.onlineGameCenter = "h";
 
