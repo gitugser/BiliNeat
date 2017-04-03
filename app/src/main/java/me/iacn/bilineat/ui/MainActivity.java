@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
         Intent intent = getIntent();
         mThemeColor = intent.getIntExtra("color", -298343);
 
-        StatusBarUtils.setColor(this, getResources().getColor(R.color.pink));
+        StatusBarUtils.setColor(this, mThemeColor);
 
         findView();
         initActionBar();
