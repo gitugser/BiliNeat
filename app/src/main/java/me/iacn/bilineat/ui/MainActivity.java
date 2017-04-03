@@ -81,6 +81,11 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
     }
 
     private void initData() {
+        // 底栏颜色设置
+        ColorStateList colorList = getCheckedColorList();
+        mBottomBar.setItemIconTintList(colorList);
+        mBottomBar.setItemTextColor(colorList);
+
         mSharePref = getSharedPreferences("setting", MODE_WORLD_READABLE);
 
         BottomNavigationMenuView mMenuView = ReflectUtils.getObjectField(mBottomBar,
