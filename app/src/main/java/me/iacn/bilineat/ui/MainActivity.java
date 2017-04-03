@@ -44,7 +44,8 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        mThemeColor = intent.getIntExtra("color", 0);
+        mThemeColor = intent.getIntExtra("color", -298343);
+        System.out.println(mThemeColor);
 
         StatusBarUtils.setColor(this, getResources().getColor(R.color.pink));
 
@@ -62,7 +63,6 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
-        System.out.println(name);
         return super.onCreateView(name, context, attrs);
     }
 

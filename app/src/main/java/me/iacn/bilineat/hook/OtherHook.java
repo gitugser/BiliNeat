@@ -157,7 +157,8 @@ class OtherHook {
 
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            return 0;
+            // 返回默认的粉色
+            return -298343;
         }
     }
 }
