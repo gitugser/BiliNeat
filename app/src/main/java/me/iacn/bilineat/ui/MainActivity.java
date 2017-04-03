@@ -5,10 +5,8 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,11 +31,10 @@ import java.util.List;
 import me.iacn.bilineat.R;
 import me.iacn.bilineat.util.ReflectUtils;
 import me.iacn.bilineat.util.StatusBarUtils;
+import me.iacn.bilineat.util.ThemeHelper;
 
 public class MainActivity extends Activity implements ViewPager.OnPageChangeListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
-
-    private int mThemeColor;
 
     private ViewPager mPager;
     private SharedPreferences mSharePref;
@@ -51,10 +48,8 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = getIntent();
-        mThemeColor = intent.getIntExtra("color", -298343);
-
-        StatusBarUtils.setColor(this, mThemeColor);
+        ThemeHelper.init(getIntent());
+        StatusBarUtils.setColor(this, ThemeHelper.getPrimaryColor());
 
         findView();
         initActionBar();
@@ -70,7 +65,7 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
     private void initActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(mThemeColor);
+        toolbar.setBackgroundColor(ThemeHelper.getPrimaryColor());
         toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +77,7 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
     private void initData() {
         // 底栏颜色设置
-        ColorStateList colorList = getCheckedColorList();
+        ColorStateList colorList = ThemeHelper.getCheckedColorList();
         mBottomBar.setItemIconTintList(colorList);
         mBottomBar.setItemTextColor(colorList);
 
@@ -123,7 +118,7 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
         System.out.println(name);
-        ColorStateList colorList = getCheckedColorList();
+        ColorStateList colorList = ThemeHelper.getCheckedColorList();
 
         switch (name) {
             case "CheckBox":
@@ -137,7 +132,7 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
             case "Button":
                 Button button = new Button(context, attrs);
-                button.setTextColor(mThemeColor);
+                button.setTextColor(ThemeHelper.getPrimaryColor());
                 return button;
 
             case "CheckedTextView":
@@ -217,17 +212,5 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                     }
                 })
                 .show();
-    }
-
-    private ColorStateList getCheckedColorList() {
-        int[][] states = new int[2][];
-        states[0] = new int[]{android.R.attr.state_checked};
-        states[1] = new int[]{-android.R.attr.state_checked};
-
-        int[] colors = new int[2];
-        colors[0] = mThemeColor;
-        colors[1] = Color.parseColor("#6b6b6b"); // 取色得到的未勾选颜色
-
-        return new ColorStateList(states, colors);
     }
 }

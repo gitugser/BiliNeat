@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="首页净化">
+    <me.iacn.bilineat.ui.PreferenceCategory android:title="首页净化">
 
         <CheckBoxPreference
             android:key="promo_stream"
@@ -14,9 +14,9 @@
             android:summary="去除 Toolbar 里的游戏中心按钮"
             android:title="关闭顶栏广告" />
 
-    </PreferenceCategory>
+    </me.iacn.bilineat.ui.PreferenceCategory>
 
-    <PreferenceCategory android:title="侧栏净化">
+    <me.iacn.bilineat.ui.PreferenceCategory android:title="侧栏净化">
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -44,9 +44,9 @@
             android:summary="去除侧滑菜单里的免流量服务"
             android:title="关闭联通 SIM 卡" />
 
-    </PreferenceCategory>
+    </me.iacn.bilineat.ui.PreferenceCategory>
 
-    <PreferenceCategory android:title="分区净化">
+    <me.iacn.bilineat.ui.PreferenceCategory android:title="分区净化">
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -59,9 +59,9 @@
             android:summary="去除各分区滑动横幅中的广告"
             android:title="关闭横幅广告" />
 
-    </PreferenceCategory>
+    </me.iacn.bilineat.ui.PreferenceCategory>
 
-    <PreferenceCategory android:title="发现净化">
+    <me.iacn.bilineat.ui.PreferenceCategory android:title="发现净化">
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -79,9 +79,9 @@
             android:summary="去除发现里的兴趣圈"
             android:title="关闭兴趣圈" />
 
-    </PreferenceCategory>
+    </me.iacn.bilineat.ui.PreferenceCategory>
 
-    <PreferenceCategory android:title="其他功能">
+    <me.iacn.bilineat.ui.PreferenceCategory android:title="其他功能">
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -96,6 +96,6 @@
             android:key="default_page"
             android:title="默认进入页面" />
 
-    </PreferenceCategory>
+    </me.iacn.bilineat.ui.PreferenceCategory>
 
 </PreferenceScreen>
