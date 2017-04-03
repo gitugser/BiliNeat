@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 
@@ -128,6 +129,11 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                 }
 
                 return checkBox;
+
+            case "Button":
+                Button button = new Button(context, attrs);
+                button.setTextColor(mThemeColor);
+                return button;
 
             case "CheckedTextView":
                 CheckedTextView view = new CheckedTextView(context, attrs);
