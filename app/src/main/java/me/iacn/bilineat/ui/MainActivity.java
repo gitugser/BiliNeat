@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
+import android.widget.Switch;
 
 import java.util.Arrays;
 import java.util.List;
@@ -117,7 +118,6 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
-        System.out.println(name);
         ColorStateList colorList = ThemeHelper.getCheckedColorList();
 
         switch (name) {
@@ -129,6 +129,16 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                 }
 
                 return checkBox;
+
+            case "Switch":
+                Switch sw = new Switch(context, attrs);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    sw.setThumbTintList(colorList);
+                    sw.setTrackTintList(colorList);
+                }
+
+                return sw;
 
             case "Button":
                 Button button = new Button(context, attrs);
