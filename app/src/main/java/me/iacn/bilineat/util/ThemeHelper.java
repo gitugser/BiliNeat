@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.text.TextUtils;
 
 import me.iacn.bilineat.R;
@@ -45,6 +46,8 @@ public class ThemeHelper {
     }
 
     public static void updateTaskColor(Activity activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+
         String label = activity.getTitle().toString().trim();
         Bitmap icon = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.ic_launcher);
 
