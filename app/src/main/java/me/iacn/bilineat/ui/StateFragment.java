@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -30,6 +31,8 @@ public class StateFragment extends Fragment {
     private TextView tvSupported;
     private TextView tvRunning;
 
+    private Button btnUpdateConfig;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_state, null);
@@ -38,6 +41,8 @@ public class StateFragment extends Fragment {
         tvNeatVersion = (TextView) rootView.findViewById(R.id.tv_neat_version);
         tvSupported = (TextView) rootView.findViewById(R.id.tv_supported);
         tvRunning = (TextView) rootView.findViewById(R.id.tv_running);
+
+        btnUpdateConfig = (Button) rootView.findViewById(R.id.btn_update_config);
 
         return rootView;
     }
@@ -50,6 +55,13 @@ public class StateFragment extends Fragment {
         tvNeatVersion.setText(BuildConfig.VERSION_NAME);
         tvSupported.setText(isSupported() ? "是" : "否");
         tvRunning.setText(sXposedRunning ? "是" : "否");
+
+        btnUpdateConfig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private String getBiliVersionName() {
