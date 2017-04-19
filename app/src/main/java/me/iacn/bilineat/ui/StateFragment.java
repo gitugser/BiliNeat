@@ -1,9 +1,7 @@
 package me.iacn.bilineat.ui;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,8 +17,7 @@ import java.util.Set;
 import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.Constant;
 import me.iacn.bilineat.R;
-import me.iacn.bilineat.bean.HookBean;
-import me.iacn.bilineat.net.OnlineApi;
+import me.iacn.bilineat.net.UpdateConfigTask;
 
 /**
  * Created by iAcn on 2017/3/26
@@ -42,7 +34,6 @@ public class StateFragment extends Fragment {
     private TextView tvRunning;
 
     private Button btnUpdateConfig;
-    private TextView tvConfigVersion;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +45,6 @@ public class StateFragment extends Fragment {
         tvRunning = (TextView) rootView.findViewById(R.id.tv_running);
 
         btnUpdateConfig = (Button) rootView.findViewById(R.id.btn_update_config);
-        tvConfigVersion = (TextView) rootView.findViewById(R.id.tv_config_version);
 
         return rootView;
     }
@@ -71,7 +61,12 @@ public class StateFragment extends Fragment {
         btnUpdateConfig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new UpdateConfigTask(getActivity()).execute(tvBiliVersion.getText().toString());
+                String str = getBiliVersionName();
+                if (str.equals("无法获取")) {
+                    Toast.makeText(getActivity(), "你似乎没有安装哔哩哔哩哦", Toast.LENGTH_SHORT).show();
+                } else {
+                    new UpdateConfigTask(getActivity()).execute(tvBiliVersion.getText().toString());
+                }
             }
         });
     }
@@ -92,62 +87,5 @@ public class StateFragment extends Fragment {
         Collections.addAll(set, Constant.supportVersions);
 
         return set.contains(biliVersion);
-    }
-
-    class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
-
-        private Context mContext;
-
-        public UpdateConfigTask(Context context) {
-            super();
-            mContext = context;
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            String biliVersion = params[0];
-            String jsonText = OnlineApi.getInstance().getAdapterFile(biliVersion);
-
-            try {
-                JSONObject json = new JSONObject(jsonText);
-                int code = json.getInt("code");
-
-                // 不是正常返回值
-                if (code != 200) return false;
-
-                HookBean bean = new HookBean();
-                bean.officialVersion = json.getString("officialVersion");
-                json = json.getJSONObject("hook_info");
-
-                bean.onlineHelper = json.getString("onlineHelper");
-                bean.onlineCategoryGame = json.getString("onlineCategoryGame");
-                bean.onlineToolbarGame = json.getString("onlineToolbarGame");
-                bean.onlineUnicomSim = json.getString("onlineUnicomSim");
-                bean.onlineFoundGame = json.getString("onlineFoundGame");
-                bean.onlineGameCenter = json.getString("onlineGameCenter");
-
-                bean.foundMall = json.getString("foundMall");
-                bean.themeClass = json.getString("themeClass");
-                bean.indexInnerClass = json.getString("indexInnerClass");
-
-                // 序列化 JavaBean 到 files 目录
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(
-                        new File(mContext.getFilesDir(), bean.officialVersion)));
-                out.writeObject(bean);
-                out.close();
-
-                return true;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if (aBoolean) Toast.makeText(mContext, "配置文件更新成功", Toast.LENGTH_SHORT).show();
-        }
     }
 }
