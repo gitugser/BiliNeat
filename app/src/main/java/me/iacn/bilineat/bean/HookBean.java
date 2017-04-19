@@ -2,12 +2,16 @@ package me.iacn.bilineat.bean;
 
 import android.text.TextUtils;
 
+import java.io.Serializable;
+
 /**
  * Created by iAcn on 2017/3/27
  * Emali iAcn0301@foxmail.com
  */
 
-public class HookBean {
+public class HookBean implements Serializable {
+
+    public String officialVersion;
 
     public String onlineHelper;
     public String onlineCategoryGame;
