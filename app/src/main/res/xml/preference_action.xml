@@ -19,12 +19,6 @@
     <me.iacn.bilineat.ui.PreferenceCategory android:title="侧栏净化">
 
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="drawer_promote"
-            android:summary="去除侧滑菜单里的应用推荐\n「官方变动较大，暂时无效」"
-            android:title="关闭侧边栏广告" />
-
-        <CheckBoxPreference
             android:key="drawer_bcoin"
             android:summary="去除侧滑菜单里的B币钱包"
             android:title="关闭B币钱包" />
