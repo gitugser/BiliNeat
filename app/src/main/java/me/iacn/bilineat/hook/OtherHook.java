@@ -74,7 +74,7 @@ class OtherHook {
     private static void disableThemeDialog() {
         HookBuilder.create(mClassLoader)
                 .setClass("tv.danmaku.bili.MainActivity")
-                .setMethod("e")
+                .setMethod("c")
                 .setHookCallBack(XC_MethodReplacement.DO_NOTHING)
                 .hook();
     }
