@@ -44,7 +44,6 @@ class OtherHook {
         freeTheme(bean.themeClass);
         disableThemeDialog();
         downloadBangumi();
-        downloadMovie();
         addNeatEntrance();
     }
 
@@ -76,15 +75,6 @@ class OtherHook {
                 .setClass("tv.danmaku.bili.MainActivity")
                 .setMethod("c")
                 .setHookCallBack(XC_MethodReplacement.DO_NOTHING)
-                .hook();
-    }
-
-    private static void downloadMovie() {
-        HookBuilder.create(mClassLoader)
-                .setClass("com.bilibili.api.BiliVideoDetail")
-                .setMethod("c")
-                .setReturnType(boolean.class)
-                .setHookCallBack(XC_MethodReplacement.returnConstant(true))
                 .hook();
     }
 
