@@ -29,14 +29,14 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected Boolean doInBackground(String... params) {
         String biliVersion = params[0];
-        String jsonText = OnlineApi.getInstance().getAdapterFile(biliVersion);
+        String jsonText = RemoteApi.getInstance().getAdapterFile(biliVersion);
 
         try {
             JSONObject json = new JSONObject(jsonText);
             int code = json.getInt("code");
 
             // 不是正常返回值
-            if (code != 200) return false;
+            if (code != 200) return null;
 
             HookBean bean = new HookBean();
             bean.officialVersion = json.getString("officialVersion");
@@ -53,17 +53,21 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
             bean.themeClass = json.getString("themeClass");
             bean.indexInnerClass = json.getString("indexInnerClass");
 
+            File file = new File(mContext.getFilesDir(), bean.officialVersion);
+            boolean exists = file.exists();
+
             // 序列化 JavaBean 到 files 目录
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(
-                    new File(mContext.getFilesDir(), bean.officialVersion)));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
             out.writeObject(bean);
             out.close();
 
-            return true;
+            file.setReadable(true, false);
+
+            return !exists;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 

@@ -9,16 +9,16 @@ import java.net.URL;
  * Emali iAcn0301@foxmail.com
  */
 
-public class OnlineApi {
+public class RemoteApi {
 
-    private static OnlineApi sLeanApi;
+    private static RemoteApi sLeanApi;
     private static final String BASE_URL = "http://api.iacn.me/bilineat/";
 
-    public static OnlineApi getInstance() {
+    public static RemoteApi getInstance() {
         if (sLeanApi == null) {
-            synchronized (OnlineApi.class) {
+            synchronized (RemoteApi.class) {
                 if (sLeanApi == null) {
-                    sLeanApi = new OnlineApi();
+                    sLeanApi = new RemoteApi();
                 }
             }
         }
@@ -26,7 +26,7 @@ public class OnlineApi {
         return sLeanApi;
     }
 
-    private OnlineApi() {
+    private RemoteApi() {
     }
 
     public String getNewestVersion() {
@@ -34,7 +34,7 @@ public class OnlineApi {
         return getContentByHttp(url);
     }
 
-    public String getAdapterFile(String bili) {
+    String getAdapterFile(String bili) {
         String url = BASE_URL + "adapterfile?bili=" + bili;
         return getContentByHttp(url);
 
