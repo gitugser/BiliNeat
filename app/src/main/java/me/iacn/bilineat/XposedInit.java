@@ -61,10 +61,7 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
         PackageManager manager = context.getPackageManager();
         final String version = manager.getPackageInfo(Constant.biliPackageName, 0).versionName;
-        String filesDir = manager.getPackageInfo(BuildConfig.APPLICATION_ID, 0).applicationInfo
-                .dataDir + "/files";
-
-        final String configPath = isSupport(version, filesDir);
+        final String configPath = isSupport(version, loadParam.appInfo.dataDir + "/files/bilineat");
 
         if (configPath != null) {
             // 支持当前版本

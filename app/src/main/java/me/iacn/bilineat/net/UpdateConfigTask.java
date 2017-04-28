@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
-import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.bean.HookBean;
 
 /**
@@ -54,8 +53,7 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
             bean.themeClass = json.getString("themeClass");
             bean.indexInnerClass = json.getString("indexInnerClass");
 
-            File file = new File(mContext.getPackageManager().getPackageInfo(
-                    BuildConfig.APPLICATION_ID, 0).applicationInfo.dataDir + "/files");
+            File file = new File(mContext.getFilesDir(), "bilineat");
 
             if (!file.exists()) {
                 boolean mkdir = file.mkdir();
@@ -68,8 +66,6 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
             out.writeObject(bean);
             out.close();
-
-            file.setReadable(true, false);
 
             return true;
 
