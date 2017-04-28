@@ -94,9 +94,8 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
         mOnClickListener = ReflectUtils.getObjectField(mMenuView,
                 "mOnClickListener", View.OnClickListener.class);
 
-        final List<Fragment> pageList = Arrays.asList(
-                new StateFragment(),
-                new ActionFragment(),
+        final List<BasePrefFragment> pageList = Arrays.asList(
+                new NeatFragment(),
                 new AboutFragment());
 
         mPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
@@ -199,12 +198,8 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                 mPager.setCurrentItem(0);
                 break;
 
-            case R.id.menu_action:
-                mPager.setCurrentItem(1);
-                break;
-
             case R.id.menu_about:
-                mPager.setCurrentItem(2);
+                mPager.setCurrentItem(1);
                 break;
 
             default:

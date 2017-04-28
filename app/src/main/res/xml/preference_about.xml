@@ -6,16 +6,16 @@
         android:title="隐藏桌面图标" />
 
     <Preference
+        android:key="version"
+        android:title="版本" />
+
+    <Preference
         android:summary="iAcn"
         android:title="作者" />
 
     <Preference
-        android:key="supported_version"
-        android:title="支持" />
-
-    <Preference
         android:key="donate"
-        android:summary="这会尝试打开支付宝"
+        android:summary="这会尝试打开你的支付宝"
         android:title="捐赠" />
 
     <Preference

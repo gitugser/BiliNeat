@@ -8,7 +8,7 @@ import android.preference.Preference;
  * Emali iAcn0301@foxmail.com
  */
 
-public class ActionFragment extends BasePrefFragment implements Preference.OnPreferenceChangeListener {
+public class NeatFragment extends BasePrefFragment implements Preference.OnPreferenceChangeListener {
 
     private ListPreference defaultPage;
 

@@ -20,13 +20,11 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import me.iacn.bilineat.hook.HookHandler;
 import me.iacn.bilineat.net.UpdateConfigTask;
-import me.iacn.bilineat.ui.StateFragment;
 import me.iacn.bilineat.util.HookBuilder;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
-import static de.robv.android.xposed.XposedHelpers.setStaticBooleanField;
 
 /**
  * Created by iAcn on 2016/10/5
@@ -45,16 +43,7 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
     @Override
     public void handleLoadPackage(final LoadPackageParam loadParam) throws Throwable {
-        if (BuildConfig.APPLICATION_ID.equals(loadParam.packageName)) {
-            // Hook 自己
-            Class<?> clazz = findClass(StateFragment.class.getName(), loadParam.classLoader);
-            setStaticBooleanField(clazz, "sXposedRunnloadParaming", true);
-            return;
-
-        } else if (!Constant.biliPackageName.equals(loadParam.packageName)) {
-            // Hook 哔哩哔哩
-            return;
-        }
+        if (!Constant.biliPackageName.equals(loadParam.packageName)) return;
 
         Object activityThread = callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread");
         Context context = (Context) callMethod(activityThread, "getSystemContext");

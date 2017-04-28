@@ -1,9 +1,7 @@
 package me.iacn.bilineat.hook;
 
-import android.content.Context;
 import android.content.res.XResources;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
@@ -32,9 +30,6 @@ public class HookHandler {
 
     private static HookBean getHookBean(String configPath) {
         try {
-            File file = new File(configPath);
-            System.out.println("--------------->" + file.canRead());
-
             ObjectInputStream stream = new ObjectInputStream(new FileInputStream(configPath));
             HookBean bean = (HookBean) stream.readObject();
             stream.close();

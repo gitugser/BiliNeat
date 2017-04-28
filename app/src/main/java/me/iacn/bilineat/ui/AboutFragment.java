@@ -8,10 +8,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
-import android.text.TextUtils;
 import android.widget.Toast;
 
-import me.iacn.bilineat.Constant;
+import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.R;
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
 
@@ -37,7 +36,7 @@ public class AboutFragment extends BasePrefFragment {
         mComponentName = new ComponentName(getActivity(), MainActivity.class.getName() + "-Alias");
         mSharedPref = getActivity().getSharedPreferences("setting", Context.MODE_WORLD_READABLE);
 
-        findPreference("supported_version").setSummary(TextUtils.join(", ", Constant.supportVersions));
+        findPreference("version").setSummary(BuildConfig.VERSION_NAME);
         findPreference("donate").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
