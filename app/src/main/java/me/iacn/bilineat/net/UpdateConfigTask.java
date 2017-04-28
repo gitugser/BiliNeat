@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
+import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.bean.HookBean;
 
 /**
@@ -53,8 +54,10 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
             bean.themeClass = json.getString("themeClass");
             bean.indexInnerClass = json.getString("indexInnerClass");
 
-            File file = new File(mContext.getFilesDir(), bean.officialVersion);
-            boolean exists = file.exists();
+            String filesDir = mContext.getPackageManager().getPackageInfo(
+                    BuildConfig.APPLICATION_ID, 0).applicationInfo.dataDir + "/files";
+
+            File file = new File(filesDir, bean.officialVersion);
 
             // 序列化 JavaBean 到 files 目录
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
@@ -63,11 +66,11 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
 
             file.setReadable(true, false);
 
-            return !exists;
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 
