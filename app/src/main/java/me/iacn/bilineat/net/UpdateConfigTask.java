@@ -54,10 +54,15 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
             bean.themeClass = json.getString("themeClass");
             bean.indexInnerClass = json.getString("indexInnerClass");
 
-            String filesDir = mContext.getPackageManager().getPackageInfo(
-                    BuildConfig.APPLICATION_ID, 0).applicationInfo.dataDir + "/files";
+            File file = new File(mContext.getPackageManager().getPackageInfo(
+                    BuildConfig.APPLICATION_ID, 0).applicationInfo.dataDir + "/files");
 
-            File file = new File(filesDir, bean.officialVersion);
+            if (!file.exists()) {
+                boolean mkdir = file.mkdir();
+                if (!mkdir) return false;
+            }
+
+            file = new File(file, bean.officialVersion);
 
             // 序列化 JavaBean 到 files 目录
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
@@ -77,6 +82,6 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
-        if (aBoolean) Toast.makeText(mContext, "配置文件更新成功", Toast.LENGTH_SHORT).show();
+        if (aBoolean) Toast.makeText(mContext, "哔哩净化配置文件已更新", Toast.LENGTH_SHORT).show();
     }
 }
