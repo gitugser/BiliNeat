@@ -11,19 +11,19 @@ import java.net.URL;
 
 public class RemoteApi {
 
-    private static RemoteApi sLeanApi;
+    private static RemoteApi sRemoteApi;
     private static final String BASE_URL = "http://api.iacn.me/bilineat/";
 
     public static RemoteApi getInstance() {
-        if (sLeanApi == null) {
+        if (sRemoteApi == null) {
             synchronized (RemoteApi.class) {
-                if (sLeanApi == null) {
-                    sLeanApi = new RemoteApi();
+                if (sRemoteApi == null) {
+                    sRemoteApi = new RemoteApi();
                 }
             }
         }
 
-        return sLeanApi;
+        return sRemoteApi;
     }
 
     private RemoteApi() {
