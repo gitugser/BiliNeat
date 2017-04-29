@@ -81,7 +81,9 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
                         protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
                             Context context = (Context) param.thisObject;
                             Toast.makeText(context, "哔哩净化暂不支持你的版本哦~", Toast.LENGTH_LONG).show();
-                            new UpdateConfigTask(context).execute(version);
+
+                            boolean ignoreUpgradeHint = xSharedPref.getBoolean("ignore_upgrade_hint", false);
+                            new UpdateConfigTask(context).execute(ignoreUpgradeHint, version);
                         }
                     }).hook();
         }

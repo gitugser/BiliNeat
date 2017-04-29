@@ -5,6 +5,11 @@
         android:key="hide_launcher"
         android:title="隐藏桌面图标" />
 
+    <SwitchPreference
+        android:summary="将不会提示你更新净化到最新版本"
+        android:key="ignore_upgrade_hint"
+        android:title="忽略更新提示" />
+
     <Preference
         android:key="version"
         android:title="版本" />

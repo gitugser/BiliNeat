@@ -19,7 +19,7 @@ import me.iacn.bilineat.bean.HookBean;
  * Emali iAcn0301@foxmail.com
  */
 
-public class UpdateConfigTask extends AsyncTask<String, Void, Integer> {
+public class UpdateConfigTask extends AsyncTask<Object, Void, Integer> {
 
     private static final int RESULT_NOT_NEWEST = 200;
     private static final int RESULT_UPDATE_SUCCESS = 740;
@@ -33,17 +33,18 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Integer> {
     }
 
     @Override
-    protected Integer doInBackground(String... params) {
+    protected Integer doInBackground(Object... params) {
         try {
             String newestVersion = RemoteApi.getInstance().getNewestVersion();
+            boolean ignoreUpgradeHint = (boolean) params[0];
 
             // 不是最新版本的净化
-            if (TextUtils.equals(newestVersion,
+            if (!ignoreUpgradeHint && TextUtils.equals(newestVersion,
                     mContext.getPackageManager()
                             .getPackageInfo(BuildConfig.APPLICATION_ID, 0)
                             .versionName)) return RESULT_NOT_NEWEST;
 
-            String biliVersion = params[0];
+            String biliVersion = (String) params[1];
             String jsonText = RemoteApi.getInstance().getAdapterFile(biliVersion);
 
             JSONObject json = new JSONObject(jsonText);
