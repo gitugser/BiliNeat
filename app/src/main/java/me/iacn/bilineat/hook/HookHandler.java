@@ -34,7 +34,6 @@ public class HookHandler {
             HookBean bean = (HookBean) stream.readObject();
             stream.close();
 
-            System.out.println(bean);
             return bean;
 
         } catch (Exception e) {

@@ -60,6 +60,18 @@ class HomeHook {
                         }
                     }
                 }).hook();
+
+        HookBuilder.create(mClassLoader)
+                .setClass("tv.danmaku.bili.tianma.promo.cards.BannerCard")
+                .setMethod("a")
+                .setParamTypes(Object.class)
+                .setHookCallBack(new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        List list = (List) getObjectField(param.args[0], "items");
+                        deleteAdItemFromList(list);
+                    }
+                }).hook();
     }
 
     /**
