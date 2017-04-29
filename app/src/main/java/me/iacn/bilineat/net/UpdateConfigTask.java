@@ -2,6 +2,7 @@ package me.iacn.bilineat.net;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
+import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.bean.HookBean;
 
 /**
@@ -17,7 +19,11 @@ import me.iacn.bilineat.bean.HookBean;
  * Emali iAcn0301@foxmail.com
  */
 
-public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
+public class UpdateConfigTask extends AsyncTask<String, Void, Integer> {
+
+    private static final int RESULT_NOT_NEWEST = 200;
+    private static final int RESULT_UPDATE_SUCCESS = 740;
+    private static final int RESULT_UPDATE_FAILED = 366;
 
     private Context mContext;
 
@@ -27,16 +33,24 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(String... params) {
-        String biliVersion = params[0];
-        String jsonText = RemoteApi.getInstance().getAdapterFile(biliVersion);
-
+    protected Integer doInBackground(String... params) {
         try {
+            String newestVersion = RemoteApi.getInstance().getNewestVersion();
+
+            // 不是最新版本的净化
+            if (TextUtils.equals(newestVersion,
+                    mContext.getPackageManager()
+                            .getPackageInfo(BuildConfig.APPLICATION_ID, 0)
+                            .versionName)) return RESULT_NOT_NEWEST;
+
+            String biliVersion = params[0];
+            String jsonText = RemoteApi.getInstance().getAdapterFile(biliVersion);
+
             JSONObject json = new JSONObject(jsonText);
             int code = json.getInt("code");
 
             // 不是正常返回值
-            if (code != 200) return null;
+            if (code != 200) return RESULT_UPDATE_FAILED;
 
             HookBean bean = new HookBean();
             bean.officialVersion = json.getString("officialVersion");
@@ -57,7 +71,7 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
 
             if (!file.exists()) {
                 boolean mkdir = file.mkdir();
-                if (!mkdir) return false;
+                if (!mkdir) return RESULT_UPDATE_FAILED;
             }
 
             file = new File(file, bean.officialVersion);
@@ -67,17 +81,25 @@ public class UpdateConfigTask extends AsyncTask<String, Void, Boolean> {
             out.writeObject(bean);
             out.close();
 
-            return true;
+            return RESULT_UPDATE_SUCCESS;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return RESULT_UPDATE_FAILED;
         }
     }
 
     @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
-        if (aBoolean) Toast.makeText(mContext, "哔哩净化配置文件已更新", Toast.LENGTH_SHORT).show();
+    protected void onPostExecute(Integer aInteger) {
+        super.onPostExecute(aInteger);
+        switch (aInteger) {
+            case RESULT_NOT_NEWEST:
+                Toast.makeText(mContext, "请更新哔哩净化到最新版本", Toast.LENGTH_SHORT).show();
+                break;
+
+            case RESULT_UPDATE_SUCCESS:
+                Toast.makeText(mContext, "哔哩净化配置文件已更新", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }
