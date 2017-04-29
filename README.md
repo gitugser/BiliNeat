@@ -2,7 +2,10 @@
 哔哩净化插件，适用于 Android 上的哔哩哔哩客户端
 
 仅供技术交流，若被告知需停止使用，本人会及时删除，请勿用于商业及非法用途，如产生法律纠纷与本人无关
-
+ 
+### BiliNeat-Server 服务端
+https://github.com/iAcn/BiliNeat-Server
+ 
 ### 自动适配脚本
 拖动哔哩哔哩安装包 apk 文件到 Run.bat 上，等待打印结果。然后根据打印出的结果编写 Java 代码即可  
 如出现 xxx = Not Found，则需要手动适配
