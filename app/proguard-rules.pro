@@ -17,7 +17,3 @@
    android.support.design.internal.BottomNavigationItemView[] mButtons;
    android.view.View$OnClickListener mOnClickListener;
 }
-
--keepclassmembers class me.iacn.bilineat.ui.StateFragment {
-   boolean sXposedRunning;
-}
