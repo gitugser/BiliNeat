@@ -39,7 +39,7 @@ public class UpdateConfigTask extends AsyncTask<Object, Void, Integer> {
             boolean ignoreUpgradeHint = (boolean) params[0];
 
             // 不是最新版本的净化
-            if (!ignoreUpgradeHint && TextUtils.equals(newestVersion,
+            if (!ignoreUpgradeHint && !TextUtils.equals(newestVersion,
                     mContext.getPackageManager()
                             .getPackageInfo(BuildConfig.APPLICATION_ID, 0)
                             .versionName)) return RESULT_NOT_NEWEST;
