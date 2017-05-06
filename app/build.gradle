@@ -19,6 +19,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 修改生成 Apk 的文件名
+    android.applicationVariants.all { variant ->
+        def file = variant.outputs[0].outputFile
+        def outFileName = 'BiliNeat_' + defaultConfig.versionName + '.apk'
+        variant.outputs[0].outputFile = new File(file.parent, outFileName)
+    }
 }
 
 dependencies {
