@@ -5,6 +5,7 @@ import android.content.res.XResources;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
+import me.iacn.bilineat.XposedInit;
 import me.iacn.bilineat.bean.HookBean;
 
 /**
@@ -15,6 +16,7 @@ import me.iacn.bilineat.bean.HookBean;
 public class HookHandler {
 
     public static void methodHook(ClassLoader loader, String configPath) {
+        XposedInit.xSharedPref.reload();
         HookBean bean = getHookBean(configPath);
 
         if (!bean.isEmpty()) {

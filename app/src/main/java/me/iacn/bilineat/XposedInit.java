@@ -52,38 +52,28 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
         final String version = manager.getPackageInfo(Constant.biliPackageName, 0).versionName;
         final String configPath = isSupport(version, loadParam.appInfo.dataDir + "/files/bilineat");
 
-        if (configPath != null) {
-            // 支持当前版本
-            xSharedPref.reload();
+        final boolean hasConfig = configPath != null;
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            // Android 5.0 以上
+            if (hasConfig) {
                 HookHandler.methodHook(loadParam.classLoader, configPath);
             } else {
-                // Lollipop 以下在 Application 初始化完成后再进行 Hook
-                HookBuilder.create(loadParam.classLoader)
-                        .setClass("tv.danmaku.bili.MainApplication")
-                        .setMethod("onCreate")
-                        .setHookCallBack(new XC_MethodHook() {
-                            @Override
-                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                HookHandler.methodHook(loadParam.classLoader, configPath);
-                            }
-                        }).hook();
+                downloadConfigFile(loadParam.classLoader, version);
             }
         } else {
-            // 不支持当前哔哩哔哩版本,弹出 Toast 提示并更新配置文件
+            // Android 4.4 以下在 MultiDex 加载完成后再进行 Hook
             HookBuilder.create(loadParam.classLoader)
-                    .setClass("tv.danmaku.bili.ui.splash.SplashActivity")
+                    .setClass("tv.danmaku.bili.MainApplication")
                     .setMethod("onCreate")
-                    .setParamTypes(Bundle.class)
                     .setHookCallBack(new XC_MethodHook() {
                         @Override
-                        protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
-                            Context context = (Context) param.thisObject;
-                            Toast.makeText(context, "哔哩净化暂不支持你的版本哦~", Toast.LENGTH_LONG).show();
-
-                            boolean ignoreUpgradeHint = xSharedPref.getBoolean("ignore_upgrade_hint", false);
-                            new UpdateConfigTask(context).execute(ignoreUpgradeHint, version);
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            if (hasConfig) {
+                                HookHandler.methodHook(loadParam.classLoader, configPath);
+                            } else {
+                                downloadConfigFile(loadParam.classLoader, version);
+                            }
                         }
                     }).hook();
         }
@@ -116,5 +106,25 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
         }
 
         return null;
+    }
+
+    /**
+     * 不支持当前哔哩哔哩版本,弹出 Toast 提示并更新配置文件
+     */
+    private void downloadConfigFile(ClassLoader classLoader, final String version) {
+        HookBuilder.create(classLoader)
+                .setClass("tv.danmaku.bili.ui.splash.SplashActivity")
+                .setMethod("onCreate")
+                .setParamTypes(Bundle.class)
+                .setHookCallBack(new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+                        Context context = (Context) param.thisObject;
+                        Toast.makeText(context, "哔哩净化暂不支持你的版本哦~", Toast.LENGTH_LONG).show();
+
+                        boolean ignoreUpgradeHint = xSharedPref.getBoolean("ignore_upgrade_hint", false);
+                        new UpdateConfigTask(context).execute(ignoreUpgradeHint, version);
+                    }
+                }).hook();
     }
 }
