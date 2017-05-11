@@ -17,7 +17,6 @@ class HookParam(object):
         self.unicom_method = 'j'  # 此方法目前为空实现
 
         self.theme_class = 'NotFound'
-        self.theme_param_class = 'NotFound'
 
         self.bmall_class = 'NotFound'
         self.banner_class = 'NotFound'
@@ -42,7 +41,6 @@ def print_result(param):
     print('onlineGameCenter   = ' + param.game_center_method)
     print()
     print('ThemeClass      = ' + param.theme_class)
-    print('ThemeParamClass = ' + param.theme_param_class)
     print()
     print('BMallClass      = ' + param.bmall_class)
     print('BannerClass     = ' + param.banner_class)
@@ -100,13 +98,14 @@ def find_key_text(name, param):
                 param.online_helper_class = name
                 find_online_helper(file, param)
 
-            # # 主题
-            # elif r'\u8be5\u76ae\u80a4\u4e0d\u5b58\u5728' in line:
-            #     param.theme_class = name
-            #     file.seek(0)
-            #     methods = re.findall('\.method private a\(Lbl/([a-zA-z]{3});\)V', file.read())
-            #     param.theme_param_class = methods[0]
-            #
+            # 主题
+            elif r'\u8be5\u76ae\u80a4\u4e0d\u5b58\u5728' in line:
+                param.theme_class = name
+                # 暂时无用，未发现 Method Name 有较大变动
+                # file.seek(0)
+                # methods = re.findall('\.method private a\(Lbl/([a-zA-z]{3});\)V', file.read())
+                # param.theme_param_class = methods[0]
+
             # # 周边商城
             # elif 'http://bmall.bilibili.com' in line:
             #     param.bmall_class = name
