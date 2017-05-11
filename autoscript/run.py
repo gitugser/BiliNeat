@@ -12,9 +12,9 @@ class HookParam(object):
         self.online_helper_class = 'NotFound'
         self.category_method = 'NotFound'
         self.toolbar_method = 'NotFound'
-        self.drawer_method = 'NotFound'
         self.found_method = 'NotFound'
         self.game_center_method = 'NotFound'
+        self.unicom_method = 'j'  # 此方法目前为空实现
 
         self.theme_class = 'NotFound'
         self.theme_param_class = 'NotFound'
@@ -34,12 +34,12 @@ def enter_bl_folder():
 
 
 def print_result(param):
-    print('OnlineHelper    = ' + param.online_helper_class)
-    print('isShowCategory  = ' + param.category_method)
-    print('isShowToolBar   = ' + param.toolbar_method)
-    print('isShowDraw      = ' + param.drawer_method)
-    print('isShowFound     = ' + param.found_method)
-    print('GameCenter      = ' + param.game_center_method)
+    print('onlineHelper       = ' + param.online_helper_class)
+    print('onlineCategoryGame = ' + param.category_method)
+    print('onlineToolbarGame  = ' + param.toolbar_method)
+    print('onlineUnicomSim    = ' + param.unicom_method)
+    print('onlineFoundGame    = ' + param.found_method)
+    print('onlineGameCenter   = ' + param.game_center_method)
     print()
     print('ThemeClass      = ' + param.theme_class)
     print('ThemeParamClass = ' + param.theme_param_class)
@@ -80,9 +80,6 @@ def find_online_helper(file, param):
         elif 'hide_gamecenter_in_toolbar_channels' in line:
             param.toolbar_method = get_online_method(line, content, regex)
 
-        elif 'hide_app_recommend_in_drawer_channels' in line:
-            param.drawer_method = get_online_method(line, content, regex)
-
         elif 'hide_gamecenter_in_discover_channels' in line:
             param.found_method = get_online_method(line, content, regex)
 
@@ -99,24 +96,24 @@ def find_key_text(name, param):
         # 逐行遍历文件内容
         for line in file:
             # 在线参数配置
-            if 'OnlineParamsHelper' in line:
+            if '"OnlineParamsHelper"' in line:
                 param.online_helper_class = name
                 find_online_helper(file, param)
 
-            # 主题
-            elif r'\u8be5\u76ae\u80a4\u4e0d\u5b58\u5728' in line:
-                param.theme_class = name
-                file.seek(0)
-                methods = re.findall('\.method private a\(Lbl/([a-zA-z]{3});\)V', file.read())
-                param.theme_param_class = methods[0]
-
-            # 周边商城
-            elif 'http://bmall.bilibili.com' in line:
-                param.bmall_class = name
-
-            # 首页推荐
-            elif regex.match(line):
-                param.banner_class = name
+            # # 主题
+            # elif r'\u8be5\u76ae\u80a4\u4e0d\u5b58\u5728' in line:
+            #     param.theme_class = name
+            #     file.seek(0)
+            #     methods = re.findall('\.method private a\(Lbl/([a-zA-z]{3});\)V', file.read())
+            #     param.theme_param_class = methods[0]
+            #
+            # # 周边商城
+            # elif 'http://bmall.bilibili.com' in line:
+            #     param.bmall_class = name
+            #
+            # # 首页推荐
+            # elif regex.match(line):
+            #     param.banner_class = name
 
 
 def find_files():
@@ -132,9 +129,9 @@ def find_files():
     # 切换回脚本目录
     os.chdir('../..')
 
-    if os.path.exists('out'):
-        print_tips('Delete Temp Files')
-        shutil.rmtree('out')
+    # if os.path.exists('out'):
+    #     print_tips('Delete Temp Files')
+    #     shutil.rmtree('out')
 
     print_tips('Find Complete')
     print_result(param)
@@ -156,7 +153,8 @@ def decode_dex():
 
         command = 'java -jar {jarPath} disassemble {apkPath} -o {outDir}'
         os.system(command
-                  .replace('{jarPath}', os.path.join(SCRIPT_DIR, 'baksmali.jar'))
+                  # .replace('{jarPath}', os.path.join(SCRIPT_DIR, 'baksmali.jar'))
+                  .replace('{jarPath}', os.path.join(SCRIPT_DIR, 'E:/WorkSpace/Android/BiliNeat/autoscript/baksmali.jar'))
                   .replace('{apkPath}', path)
                   .replace('{outDir}', os.path.join(SCRIPT_DIR, 'out')))
 
@@ -173,5 +171,5 @@ def show_entrance():
 
 if __name__ == '__main__':
     show_entrance()
-    decode_dex()
+    # decode_dex()
     run()
