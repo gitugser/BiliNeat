@@ -1,6 +1,5 @@
 import os
 import re
-import shutil
 
 import sys
 
@@ -106,13 +105,13 @@ def find_key_text(name, param):
                 # methods = re.findall('\.method private a\(Lbl/([a-zA-z]{3});\)V', file.read())
                 # param.theme_param_class = methods[0]
 
-            # # 周边商城
-            # elif 'http://bmall.bilibili.com' in line:
-            #     param.bmall_class = name
-            #
-            # # 首页推荐
-            # elif regex.match(line):
-            #     param.banner_class = name
+            # 周边商城
+            elif 'http://bmall.bilibili.com' in line:
+                param.bmall_class = name
+
+                # # 首页推荐
+                # elif regex.match(line):
+                #     param.banner_class = name
 
 
 def find_files():
@@ -153,7 +152,8 @@ def decode_dex():
         command = 'java -jar {jarPath} disassemble {apkPath} -o {outDir}'
         os.system(command
                   # .replace('{jarPath}', os.path.join(SCRIPT_DIR, 'baksmali.jar'))
-                  .replace('{jarPath}', os.path.join(SCRIPT_DIR, 'E:/WorkSpace/Android/BiliNeat/autoscript/baksmali.jar'))
+                  .replace('{jarPath}',
+                           os.path.join(SCRIPT_DIR, 'E:/WorkSpace/Android/BiliNeat/autoscript/baksmali.jar'))
                   .replace('{apkPath}', path)
                   .replace('{outDir}', os.path.join(SCRIPT_DIR, 'out')))
 
