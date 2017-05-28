@@ -6,8 +6,8 @@
         android:title="隐藏桌面图标" />
 
     <SwitchPreference
-        android:summary="将不会提示你更新净化到最新版本"
         android:key="ignore_upgrade_hint"
+        android:summary="将不会提示你更新净化到最新版本"
         android:title="忽略更新提示" />
 
     <Preference
@@ -17,6 +17,10 @@
     <Preference
         android:summary="iAcn"
         android:title="作者" />
+
+    <Preference
+        android:key="adapted"
+        android:title="已适配" />
 
     <Preference
         android:key="donate"

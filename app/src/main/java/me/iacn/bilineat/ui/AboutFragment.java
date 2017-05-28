@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import me.iacn.bilineat.BuildConfig;
 import me.iacn.bilineat.R;
+import me.iacn.bilineat.net.GetAdaptedTask;
 import moe.feng.alipay.zerosdk.AlipayZeroSdk;
 
 /**
@@ -70,6 +71,8 @@ public class AboutFragment extends BasePrefFragment {
         boolean executed = mSharedPref.getBoolean("change_method_executed", false);
 
         hideLauncher.setChecked(!executed || isHide);
+
+        new GetAdaptedTask(findPreference("adapted")).execute();
     }
 
     private void openAliPay() {
