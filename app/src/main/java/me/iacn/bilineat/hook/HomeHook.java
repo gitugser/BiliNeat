@@ -202,7 +202,10 @@ class HomeHook {
                         menu.getItem(2).setVisible(vipPoint);
 
                         // 取得第十个 Menu，为 B币钱包
-                        menu.getItem(9).setVisible(bcoin);
+//                        menu.getItem(9).setVisible(bcoin);
+
+                        // 为应对即将出现的「BML订单」Item 项，暂时 +1
+                        menu.getItem(10).setVisible(bcoin);
                     }
                 }).hook();
     }
