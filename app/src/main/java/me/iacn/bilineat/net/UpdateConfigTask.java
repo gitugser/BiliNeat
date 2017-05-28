@@ -45,7 +45,7 @@ public class UpdateConfigTask extends AsyncTask<Object, Void, Integer> {
                             .versionName)) return RESULT_NOT_NEWEST;
 
             String biliVersion = (String) params[1];
-            String jsonText = RemoteApi.getInstance().getAdapterFile(biliVersion);
+            String jsonText = RemoteApi.getInstance().getConfigFile(biliVersion);
 
             JSONObject json = new JSONObject(jsonText);
             int code = json.getInt("code");

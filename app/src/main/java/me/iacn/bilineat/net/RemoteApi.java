@@ -3,18 +3,19 @@ package me.iacn.bilineat.net;
 import java.io.ByteArrayOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by iAcn on 2017/4/18
  * Emali iAcn0301@foxmail.com
  */
 
-public class RemoteApi {
+class RemoteApi {
 
     private static RemoteApi sRemoteApi;
     private static final String BASE_URL = "http://api.iacn.me/bilineat/";
 
-    public static RemoteApi getInstance() {
+    static RemoteApi getInstance() {
         if (sRemoteApi == null) {
             synchronized (RemoteApi.class) {
                 if (sRemoteApi == null) {
@@ -34,8 +35,13 @@ public class RemoteApi {
         return getContentByHttp(url);
     }
 
-    String getAdapterFile(String bili) {
+    String getConfigFile(String bili) {
         String url = BASE_URL + "configfile?bili=" + bili;
+        return getContentByHttp(url);
+    }
+
+    String getAdaptedVersion(){
+        String url = BASE_URL + "adaptedversion";
         return getContentByHttp(url);
     }
 
