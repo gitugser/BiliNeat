@@ -70,6 +70,17 @@ class HomeHook {
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         List list = (List) getObjectField(param.args[0], "items");
                         deleteAdItemFromList(list);
+
+                        // 因推荐数据流中番剧的 is_ad_loc 也被标识为 True（不知什么鬼
+                        // 所以这里暂时只在推荐 Banner 里去除
+                        // 据观察一般都是推荐的游戏
+                        for (Object obj : new ArrayList(list)) {
+                            boolean isAdLoc = getBooleanField(obj, "isAdLoc");
+
+                            if (isAdLoc) {
+                                list.remove(obj);
+                            }
+                        }
                     }
                 }).hook();
     }
