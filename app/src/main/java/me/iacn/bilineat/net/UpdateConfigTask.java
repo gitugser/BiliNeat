@@ -55,7 +55,7 @@ public class UpdateConfigTask extends AsyncTask<Object, Void, Integer> {
 
             HookBean bean = new HookBean();
             bean.officialVersion = json.getString("officialVersion");
-            json = json.getJSONObject("hook_info");
+            json = json.getJSONObject("hookInfo");
 
             bean.onlineHelper = json.getString("onlineHelper");
             bean.onlineCategoryGame = json.getString("onlineCategoryGame");
