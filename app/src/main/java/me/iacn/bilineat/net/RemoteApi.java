@@ -29,15 +29,14 @@ public class RemoteApi {
     private RemoteApi() {
     }
 
-    public String getNewestVersion() {
-        String url = BASE_URL + "version";
+    String getNewestVersion() {
+        String url = BASE_URL + "neatversion";
         return getContentByHttp(url);
     }
 
     String getAdapterFile(String bili) {
-        String url = BASE_URL + "adapterfile?bili=" + bili;
+        String url = BASE_URL + "configfile?bili=" + bili;
         return getContentByHttp(url);
-
     }
 
     private String getContentByHttp(String url) {
