@@ -18,6 +18,7 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.findFirstFieldByExactType;
 import static de.robv.android.xposed.XposedHelpers.getBooleanField;
+import static de.robv.android.xposed.XposedHelpers.getIntField;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setIntField;
 
@@ -68,16 +69,17 @@ class HomeHook {
                 .setHookCallBack(new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        List list = (List) getObjectField(param.args[0], "items");
-                        deleteAdItemFromList(list);
+                        List list = (List) getObjectField(param.args[0], "a");
 
-                        // 因推荐数据流中番剧的 is_ad_loc 也被标识为 True（不知什么鬼
-                        // 所以这里暂时只在推荐 Banner 里去除
-                        // 据观察一般都是推荐的游戏
+                        // g: server_type
+                        // h: is_ad_loc
+                        // i: is_ad
                         for (Object obj : new ArrayList(list)) {
-                            boolean isAdLoc = getBooleanField(obj, "isAdLoc");
+                            boolean isAd = getBooleanField(obj, "i");
+                            boolean isAdLoc = getBooleanField(obj, "h");
+                            int serverType = getIntField(obj, "g");
 
-                            if (isAdLoc) {
+                            if (isAd || (isAdLoc && serverType == 1)) {
                                 list.remove(obj);
                             }
                         }
