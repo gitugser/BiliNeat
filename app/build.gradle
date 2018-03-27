@@ -28,10 +28,6 @@ android {
     }
 }
 
-repositories {
-    jcenter();
-}
-
 dependencies {
     provided files('libs/api-82.jar')
     compile 'com.android.support:design:25.3.1'
