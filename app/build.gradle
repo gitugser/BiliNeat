@@ -33,7 +33,7 @@ repositories {
 }
 
 dependencies {
-    provided 'de.robv.android.xposed:api:82'
+    provided files('libs/api-82.jar')
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v13:25.3.1'
     compile 'moe.feng:AlipayZeroSdk:1.1'
